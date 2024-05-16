@@ -20,7 +20,6 @@
 		<sonar.projectKey>algaworks-esr-algafood-api</sonar.projectKey>
 		<sonar.projectName>Algafood API</sonar.projectName>
 		<sonar.projectVersion>1.0</sonar.projectVersion>
-    	<sonar.login>sqp_57be85ab42a31991cba33d315cbf3ea28853644a</sonar.login>
     	<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
     	<sonar.sources>src/main/java</sonar.sources>
     	<sonar.tests>src/test/java</sonar.tests>
