@@ -26,6 +26,10 @@
     	<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     	<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     	<sonar.jacoco.reportPaths>${project.build.directory}/jacoco.exec</sonar.jacoco.reportPaths>
+		<sonar.exclusions>
+			**/src/test/**/*,&#10;
+			**/src/main/java/br/com/ajvideira/algafood/api/AlgafoodApiApplication.java
+		</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
