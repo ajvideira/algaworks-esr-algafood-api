@@ -10,8 +10,8 @@ public interface RestauranteRepository {
 
     Restaurante findById(Long id);
 
-    Restaurante save(Restaurante cozinha);
+    Restaurante save(Restaurante restaurante);
 
-    void delete(Restaurante cozinha);
+    void delete(Restaurante restaurante);
 
 }
