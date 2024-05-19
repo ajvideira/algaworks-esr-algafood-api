@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 import br.com.ajvideira.algafood.api.AlgafoodApiApplication;
 import br.com.ajvideira.algafood.api.domain.model.Cozinha;
+import br.com.ajvideira.algafood.api.domain.repository.CozinhaRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,15 +18,15 @@ public class AdicionarCozinhaMain {
         ApplicationContext applicationContext = new SpringApplicationBuilder(AlgafoodApiApplication.class)
                 .web(WebApplicationType.NONE).run(args);
 
-        CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+        CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 
         Cozinha cozinhaBrasileira = new Cozinha();
         cozinhaBrasileira.setNome("Brasileira");
-        cozinhaBrasileira = cadastroCozinha.salvar(cozinhaBrasileira);
+        cozinhaBrasileira = cozinhaRepository.save(cozinhaBrasileira);
 
         Cozinha cozinhaJaponesa = new Cozinha();
         cozinhaJaponesa.setNome("Japonesa");
-        cozinhaJaponesa = cadastroCozinha.salvar(cozinhaJaponesa);
+        cozinhaJaponesa = cozinhaRepository.save(cozinhaJaponesa);
 
         Arrays.asList(cozinhaBrasileira, cozinhaJaponesa).stream()
                 .forEach(cozinha -> log.info("{} - {}", cozinha.getId(), cozinha.getNome()));
