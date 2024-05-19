@@ -1,7 +1,5 @@
 package br.com.ajvideira.algafood.api.jpa;
 
-import java.util.Arrays;
-
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +9,7 @@ import br.com.ajvideira.algafood.api.domain.model.Cozinha;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AdicionarCozinhaMain {
+public class AtualizarCozinhaMain {
 
     public static void main(String[] args) {
         ApplicationContext applicationContext = new SpringApplicationBuilder(AlgafoodApiApplication.class)
@@ -19,16 +17,12 @@ public class AdicionarCozinhaMain {
 
         CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
 
-        Cozinha cozinhaBrasileira = new Cozinha();
-        cozinhaBrasileira.setNome("Brasileira");
-        cozinhaBrasileira = cadastroCozinha.salvar(cozinhaBrasileira);
+        Cozinha cozinha = new Cozinha();
+        cozinha.setId(1L);
+        cozinha.setNome("Brasileira");
+        cozinha = cadastroCozinha.salvar(cozinha);
 
-        Cozinha cozinhaJaponesa = new Cozinha();
-        cozinhaJaponesa.setNome("Japonesa");
-        cozinhaJaponesa = cadastroCozinha.salvar(cozinhaJaponesa);
-
-        Arrays.asList(cozinhaBrasileira, cozinhaJaponesa).stream()
-                .forEach(cozinha -> log.info("{} - {}", cozinha.getId(), cozinha.getNome()));
+        log.info("{} - {}", cozinha.getId(), cozinha.getNome());
 
     }
 
