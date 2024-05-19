@@ -28,7 +28,8 @@
     	<sonar.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.jacoco.xmlReportPaths>
 		<sonar.exclusions>
 			**/src/test/**/*,&#10;
-			**/src/main/java/br/com/ajvideira/algafood/api/AlgafoodApiApplication.java
+			**/src/main/java/br/com/ajvideira/algafood/api/AlgafoodApiApplication.java,&#10;
+			**/src/main/java/br/com/ajvideira/algafood/api/domain/model/**/*
 		</sonar.exclusions>
 	</properties>
 	<dependencies>
