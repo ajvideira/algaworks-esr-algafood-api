@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.ajvideira.algafood.api.domain.model.Cozinha;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @Component
 public class CadastroCozinha {
@@ -18,6 +19,11 @@ public class CadastroCozinha {
 
     public List<Cozinha> listar() {
         return entityManager.createQuery("FROM Cozinha", Cozinha.class).getResultList();
+    }
+
+    @Transactional
+    public Cozinha adicionar(Cozinha cozinha) {
+        return entityManager.merge(cozinha);
     }
 
 }
