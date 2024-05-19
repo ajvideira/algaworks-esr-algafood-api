@@ -1,0 +1,9 @@
+spring:
+    application:
+        name: algaworks-esr-algafood-api
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/algafood
+        username: root
+        password: ${ALGAFOOD_DATASOURCE_PASSWORD}
+        driver-class-name: org.postgresql.Driver
