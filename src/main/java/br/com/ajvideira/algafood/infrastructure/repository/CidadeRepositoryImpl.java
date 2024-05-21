@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.infrastructure;
+package br.com.ajvideira.algafood.infrastructure.repository;
 
 import java.util.List;
 
