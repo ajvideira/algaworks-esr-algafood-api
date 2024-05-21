@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.api;
+package br.com.ajvideira.algafood;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

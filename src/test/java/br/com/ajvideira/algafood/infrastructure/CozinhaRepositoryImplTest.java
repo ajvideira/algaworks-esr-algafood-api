@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.api.infrastructure;
+package br.com.ajvideira.algafood.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
-import br.com.ajvideira.algafood.api.domain.model.Cozinha;
-import br.com.ajvideira.algafood.api.domain.repository.CozinhaRepository;
+import br.com.ajvideira.algafood.domain.model.Cozinha;
+import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 class CozinhaRepositoryImplTest {

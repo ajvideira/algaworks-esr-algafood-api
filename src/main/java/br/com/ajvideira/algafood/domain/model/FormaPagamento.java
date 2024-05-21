@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.api.domain.model;
+package br.com.ajvideira.algafood.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,13 +9,13 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Cozinha {
+public class FormaPagamento {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String descricao;
 
 }

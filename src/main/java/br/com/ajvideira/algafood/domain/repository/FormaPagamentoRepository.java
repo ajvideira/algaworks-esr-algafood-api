@@ -1,8 +1,8 @@
-package br.com.ajvideira.algafood.api.domain.repository;
+package br.com.ajvideira.algafood.domain.repository;
 
 import java.util.List;
 
-import br.com.ajvideira.algafood.api.domain.model.FormaPagamento;
+import br.com.ajvideira.algafood.domain.model.FormaPagamento;
 
 public interface FormaPagamentoRepository {
 

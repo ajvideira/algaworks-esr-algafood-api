@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.api.domain.model;
+package br.com.ajvideira.algafood.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
