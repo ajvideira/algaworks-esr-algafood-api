@@ -12,4 +12,8 @@ spring:
         generate-ddl: true
         hibernate:
             ddl-auto: create
+             
+        properties:
+            hibernate:
+                check-nullability: true
         show-sql: true

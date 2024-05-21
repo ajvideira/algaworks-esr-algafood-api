@@ -15,7 +15,6 @@ import br.com.ajvideira.algafood.api.domain.model.Cozinha;
 import br.com.ajvideira.algafood.api.domain.repository.CozinhaRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
-@ComponentScan
 class CozinhaRepositoryImplTest {
 
     @Autowired
@@ -52,7 +51,7 @@ class CozinhaRepositoryImplTest {
 
         cozinha = cozinhaRepository.save(cozinha);
 
-        assertEquals("Japonesa", cozinha.getNome());
+        assertEquals(cozinhaRepository.findById(cozinha.getId()), cozinha);
     }
 
     @Test
@@ -63,7 +62,7 @@ class CozinhaRepositoryImplTest {
 
         cozinha = cozinhaRepository.save(cozinha);
 
-        assertEquals("Italiana", cozinha.getNome());
+        assertEquals(cozinhaRepository.findById(cozinha.getId()), cozinha);
     }
 
     @Test

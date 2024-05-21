@@ -12,3 +12,6 @@ INSERT INTO estado (nome) VALUES ('Rio de Janeiro');
 INSERT INTO estado (nome) VALUES ('Mato Grosso');
 INSERT INTO estado (nome) VALUES ('Sergipe');
 INSERT INTO estado (nome) VALUES ('Acre');
+
+INSERT INTO permissao (nome, descricao) VALUES ('ROLE_ADMIN', 'Permissão de admin no sistema.')
+INSERT INTO permissao (nome, descricao) VALUES ('ROLE_OPERACIONAL', 'Permissão de tarefas operacionais.')

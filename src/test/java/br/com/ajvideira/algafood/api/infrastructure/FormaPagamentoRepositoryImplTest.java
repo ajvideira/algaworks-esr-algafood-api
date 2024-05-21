@@ -15,7 +15,6 @@ import br.com.ajvideira.algafood.api.domain.model.FormaPagamento;
 import br.com.ajvideira.algafood.api.domain.repository.FormaPagamentoRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
-@ComponentScan
 class FormaPagamentoRepositoryImplTest {
 
     @Autowired
@@ -53,7 +52,7 @@ class FormaPagamentoRepositoryImplTest {
 
         formaPagamento = formaPagamentoRepository.save(formaPagamento);
 
-        assertEquals("TED", formaPagamento.getDescricao());
+        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()), formaPagamento);
     }
 
     @Test
@@ -64,7 +63,7 @@ class FormaPagamentoRepositoryImplTest {
 
         formaPagamento = formaPagamentoRepository.save(formaPagamento);
 
-        assertEquals("TED", formaPagamento.getDescricao());
+        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()), formaPagamento);
     }
 
     @Test

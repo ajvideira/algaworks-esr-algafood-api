@@ -15,7 +15,6 @@ import br.com.ajvideira.algafood.api.domain.model.Estado;
 import br.com.ajvideira.algafood.api.domain.repository.EstadoRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
-@ComponentScan
 class EstadoRepositoryImplTest {
 
     @Autowired
@@ -52,7 +51,7 @@ class EstadoRepositoryImplTest {
 
         estado = estadoRepository.save(estado);
 
-        assertEquals("Alagoas", estado.getNome());
+        assertEquals(estadoRepository.findById(estado.getId()), estado);
     }
 
     @Test
@@ -63,7 +62,7 @@ class EstadoRepositoryImplTest {
 
         estado = estadoRepository.save(estado);
 
-        assertEquals("Espírito Santo", estado.getNome());
+        assertEquals(estadoRepository.findById(estado.getId()), estado);
     }
 
     @Test

@@ -18,7 +18,6 @@ import br.com.ajvideira.algafood.api.domain.model.Restaurante;
 import br.com.ajvideira.algafood.api.domain.repository.RestauranteRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
-@ComponentScan
 class RestauranteRepositoryImplTest {
 
     @Autowired
@@ -61,7 +60,8 @@ class RestauranteRepositoryImplTest {
 
         restaurante = restauranteRepository.save(restaurante);
 
-        assertEquals("Madagascar", restaurante.getNome());
+        assertEquals(restauranteRepository.findById(restaurante.getId()), restaurante);
+
     }
 
     @Test
@@ -69,10 +69,14 @@ class RestauranteRepositoryImplTest {
         Restaurante restaurante = new Restaurante();
         restaurante.setId(1L);
         restaurante.setNome("Peppo");
+        restaurante.setTaxaFrete(new BigDecimal("12.90"));
+        Cozinha cozinha = new Cozinha();
+        cozinha.setId(1L);
+        restaurante.setCozinha(cozinha);
 
         restaurante = restauranteRepository.save(restaurante);
 
-        assertEquals("Peppo", restaurante.getNome());
+        assertEquals(restauranteRepository.findById(restaurante.getId()), restaurante);
     }
 
     @Test
