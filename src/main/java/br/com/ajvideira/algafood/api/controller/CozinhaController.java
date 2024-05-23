@@ -3,6 +3,7 @@ package br.com.ajvideira.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,18 +24,23 @@ public class CozinhaController {
     }
 
     @GetMapping
-    public List<Cozinha> getAll() {
-        return cozinhaRepository.findAll();
+    public ResponseEntity<List<Cozinha>> getAll() {
+        return ResponseEntity.ok(cozinhaRepository.findAll());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public CozinhasXmlWrapper getAllinXML() {
-        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
+    public ResponseEntity<CozinhasXmlWrapper> getAllinXML() {
+        return ResponseEntity.ok(new CozinhasXmlWrapper(cozinhaRepository.findAll()));
     }
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha getById(@PathVariable Long cozinhaId) {
-        return cozinhaRepository.findById(cozinhaId);
+    public ResponseEntity<Cozinha> getById(@PathVariable Long cozinhaId) {
+        var cozinha = cozinhaRepository.findById(cozinhaId);
+        if (cozinha != null) {
+            return ResponseEntity.ok(cozinha);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

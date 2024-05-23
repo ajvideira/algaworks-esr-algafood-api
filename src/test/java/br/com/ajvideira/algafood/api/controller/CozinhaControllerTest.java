@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import br.com.ajvideira.algafood.api.model.CozinhasXmlWrapper;
 import br.com.ajvideira.algafood.domain.model.Cozinha;
@@ -31,38 +32,55 @@ class CozinhaControllerTest {
         var cozinhasMock = List.of(new Cozinha(1L, "Tailandesa"), new Cozinha(2L, "Indiana"),
                 new Cozinha(3L, "Francesa"));
 
+        var expected = ResponseEntity.ok(cozinhasMock);
+
         when(cozinhaRepository.findAll()).thenReturn(cozinhasMock);
 
         var cozinhas = cozinhaController.getAll();
 
-        assertEquals(cozinhasMock, cozinhas);
+        assertEquals(expected, cozinhas);
     }
 
     @Test
     void shouldReturnAllCozinhasInXML() {
-
         var cozinhasMock = List.of(new Cozinha(1L, "Tailandesa"), new Cozinha(2L, "Indiana"),
                 new Cozinha(3L, "Francesa"));
 
-        var cozinhasExpected = new CozinhasXmlWrapper(cozinhasMock);
+        var cozinhasXmlWrapperMock = new CozinhasXmlWrapper(cozinhasMock);
+
+        var expected = ResponseEntity.ok(cozinhasXmlWrapperMock);
 
         when(cozinhaRepository.findAll()).thenReturn(cozinhasMock);
 
         var cozinhas = cozinhaController.getAllinXML();
 
-        assertEquals(cozinhasExpected, cozinhas);
+        assertEquals(expected, cozinhas);
     }
 
     @Test
-    void shouldReturnCozinha() {
-
+    void shouldReturnCozinhaWhenExists() {
         var cozinhaMock = new Cozinha(1L, "Tailandesa");
+
+        var expected = ResponseEntity.ok(cozinhaMock);
 
         when(cozinhaRepository.findById(anyLong())).thenReturn(cozinhaMock);
 
         var cozinha = cozinhaController.getById(anyLong());
 
-        assertEquals(cozinhaMock, cozinha);
+        assertEquals(expected, cozinha);
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenNotExists() {
+        Cozinha cozinhaMock = null;
+
+        var expected = ResponseEntity.notFound().build();
+
+        when(cozinhaRepository.findById(anyLong())).thenReturn(cozinhaMock);
+
+        var cozinha = cozinhaController.getById(anyLong());
+
+        assertEquals(expected, cozinha);
     }
 
 }
