@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import br.com.ajvideira.algafood.api.model.CozinhasXmlWrapper;
 import br.com.ajvideira.algafood.domain.model.Cozinha;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
 
@@ -42,22 +41,6 @@ class CozinhaControllerTest {
     }
 
     @Test
-    void shouldReturnAllCozinhasInXML() {
-        var cozinhasMock = List.of(new Cozinha(1L, "Tailandesa"), new Cozinha(2L, "Indiana"),
-                new Cozinha(3L, "Francesa"));
-
-        var cozinhasXmlWrapperMock = new CozinhasXmlWrapper(cozinhasMock);
-
-        var expected = ResponseEntity.ok(cozinhasXmlWrapperMock);
-
-        when(cozinhaRepository.findAll()).thenReturn(cozinhasMock);
-
-        var cozinhas = cozinhaController.getAllinXML();
-
-        assertEquals(expected, cozinhas);
-    }
-
-    @Test
     void shouldReturnCozinhaWhenExists() {
         var cozinhaMock = new Cozinha(1L, "Tailandesa");
 
@@ -71,7 +54,7 @@ class CozinhaControllerTest {
     }
 
     @Test
-    void shouldReturnNotFoundWhenNotExists() {
+    void shouldReturnNotFoundWhenCozinhaNotExists() {
         Cozinha cozinhaMock = null;
 
         var expected = ResponseEntity.notFound().build();

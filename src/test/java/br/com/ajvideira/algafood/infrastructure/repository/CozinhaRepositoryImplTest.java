@@ -3,12 +3,14 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cozinha;
@@ -66,20 +68,15 @@ class CozinhaRepositoryImplTest {
     }
 
     @Test
-    void shouldDeleteManagedEntity() {
-        Cozinha cozinha = cozinhaRepository.findById(1L);
-        cozinhaRepository.delete(cozinha);
+    void shouldDeleteEntity() {
+        cozinhaRepository.delete(1L);
 
         assertNull(cozinhaRepository.findById(1L));
     }
 
     @Test
-    void shouldDeleteNonManagedEntity() {
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(2L);
-        cozinhaRepository.delete(cozinha);
-
-        assertNull(cozinhaRepository.findById(2L));
+    void shouldThrowExceptionWhenEntityNotFound() {
+        assertThrows(EmptyResultDataAccessException.class, () -> cozinhaRepository.delete(10L));
     }
 
 }
