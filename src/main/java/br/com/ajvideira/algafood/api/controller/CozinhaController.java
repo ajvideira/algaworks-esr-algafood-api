@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ajvideira.algafood.domain.CozinhaService;
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.model.Cozinha;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
+import br.com.ajvideira.algafood.domain.service.CozinhaService;
 
 @RequestMapping("/cozinhas")
 @RestController

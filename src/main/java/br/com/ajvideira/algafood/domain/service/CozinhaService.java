@@ -1,4 +1,4 @@
-package br.com.ajvideira.algafood.domain;
+package br.com.ajvideira.algafood.domain.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
