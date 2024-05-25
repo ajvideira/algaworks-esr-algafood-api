@@ -44,4 +44,15 @@ class RestauranteControllerTest {
         assertEquals(expected, response);
     }
 
+    @Test
+    void shouldReturnNotFoundWhenRestauranteNotExists() {
+        when(restauranteRepository.findById(1L)).thenReturn(null);
+
+        var expected = ResponseEntity.notFound().build();
+
+        var response = restauranteController.getById(1L);
+
+        assertEquals(expected, response);
+    }
+
 }
