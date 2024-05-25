@@ -30,6 +30,7 @@
 			**/src/test/**/*,&#10;
 			**/src/main/java/br/com/ajvideira/algafood/AlgafoodApiApplication.java,&#10;
 			**/src/main/java/br/com/ajvideira/algafood/domain/model/**/*,&#10;
+			**/src/main/java/br/com/ajvideira/algafood/domain/exception/**/*,&#10;
 			**/src/main/java/br/com/ajvideira/algafood/api/model/**/*
 		</sonar.exclusions>
 	</properties>
