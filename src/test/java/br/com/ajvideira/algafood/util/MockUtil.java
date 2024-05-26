@@ -23,7 +23,27 @@ public class MockUtil {
                 mockCozinha(cozinhaId));
     }
 
+    public static Restaurante mockRestauranteForInsert(Long cozinhaId) {
+        return new Restaurante(null, "Restaurante for cuisine " + cozinhaId, new BigDecimal("0"),
+                mockCozinha(cozinhaId));
+    }
+
+    public static Restaurante mockRestauranteForInsertWithCozinhaId(Long cozinhaId) {
+        return new Restaurante(null, "Restaurante for cuisine " + cozinhaId, new BigDecimal("0"),
+                mockCozinha(cozinhaId));
+    }
+
+    public static Restaurante mockRestauranteForUpdateWithCozinhaId(Long restauranteId, Long cozinhaId) {
+        return new Restaurante(
+                restauranteId, "Restaurante for cuisine " + cozinhaId, new BigDecimal("0"),
+                mockCozinha(cozinhaId));
+    }
+
     public static Cozinha mockCozinha(Long cozinhaId) {
         return new Cozinha(cozinhaId, "Cozinha " + cozinhaId);
+    }
+
+    public static Cozinha mockCozinhaForSaveRestaurante(Long cozinhaId) {
+        return new Cozinha(cozinhaId, null);
     }
 }
