@@ -70,12 +70,24 @@ class EstadoControllerTest {
     }
 
     @Test
-    void shouldReturnCreatedWhenCallCreateWithValidData() {
+    void shouldCreateEstadoSuccessfully() {
         var expected = ResponseEntity.status(HttpStatus.CREATED).body(new Estado(1L, "Rio de Janeiro"));
 
         when(estadoService.save(new Estado(null, "Rio de Janeiro"))).thenReturn(new Estado(1L, "Rio de Janeiro"));
 
         var response = estadoController.create(new Estado(null, "Rio de Janeiro"));
+
+        assertEquals(expected, response);
+    }
+
+    @Test
+    void shouldUpdateEstadoSuccessfully() {
+        var expected = ResponseEntity.status(HttpStatus.OK).body(new Estado(1L, "Goiás"));
+
+        when(estadoRepository.findById(1L)).thenReturn(new Estado(1L, "Rio de Janeiro"));
+        when(estadoService.save(new Estado(1L, "Goiás"))).thenReturn(new Estado(1L, "Goiás"));
+
+        var response = estadoController.update(1L, new Estado(null, "Goiás"));
 
         assertEquals(expected, response);
     }
