@@ -91,6 +91,31 @@ class RestauranteControllerTest {
     }
 
     @Test
+    void shouldUpdateRestauranteSuccessfully() {
+        when(restauranteRepository.findById(1L)).thenReturn(MockUtil.mockRestaurante(1L, 1L));
+
+        var restauranteMockBeforeServiceSave = MockUtil.mockRestaurante(1L, 1L);
+        restauranteMockBeforeServiceSave.setNome("Restaurante Updated");
+
+        var restauranteMockAfterServiceSave = MockUtil.mockRestaurante(1L, 1L);
+        restauranteMockAfterServiceSave.setNome("Restaurante Updated");
+
+        when(restauranteService.save(restauranteMockBeforeServiceSave)).thenReturn(restauranteMockAfterServiceSave);
+
+        var restauranteExpected = MockUtil.mockRestaurante(1L, 1L);
+        restauranteExpected.setNome("Restaurante Updated");
+
+        var expected = ResponseEntity.ok(restauranteExpected);
+
+        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(1L);
+        restauranteRequest.setNome("Restaurante Updated");
+
+        var response = restauranteController.update(1L, restauranteRequest);
+
+        assertEquals(expected, response);
+    }
+
+    @Test
     void shouldReturnNotFoundWhenRestauranteNotExistsInUpdate() {
         when(restauranteRepository.findById(10L)).thenReturn(null);
 
@@ -108,13 +133,13 @@ class RestauranteControllerTest {
         when(restauranteRepository.findById(1L)).thenReturn(MockUtil.mockRestaurante(1L, 1L));
 
         var restauranteMockBeforeServiceSave = MockUtil.mockRestauranteForUpdateWithCozinhaId(1L, 10L);
-        restauranteMockBeforeServiceSave.setNome("Cozinha updated");
+        restauranteMockBeforeServiceSave.setNome("Restaurante updated");
         when(restauranteService.save(restauranteMockBeforeServiceSave)).thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(10L);
-        restauranteRequest.setNome("Cozinha updated");
+        restauranteRequest.setNome("Restaurante updated");
 
         var response = restauranteController.update(1L, restauranteRequest);
 
