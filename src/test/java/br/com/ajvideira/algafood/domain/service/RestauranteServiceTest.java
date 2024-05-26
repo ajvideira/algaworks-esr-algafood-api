@@ -1,7 +1,10 @@
 package br.com.ajvideira.algafood.domain.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -9,7 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
@@ -76,6 +82,33 @@ class RestauranteServiceTest {
         restauranteRequest.setNome("Restaurante updated");
 
         assertThrows(EntityNotFoundException.class, () -> restauranteService.save(restauranteRequest));
+    }
+
+    @Test
+    void shouldDeleteWithSuccess() {
+        var restauranteId = 1L;
+
+        doNothing().when(restauranteRepository).delete(restauranteId);
+
+        assertDoesNotThrow(() -> restauranteService.delete(restauranteId));
+    }
+
+    @Test
+    void shouldThrowEntityInUseException() {
+        var restauranteId = 1L;
+
+        doThrow(DataIntegrityViolationException.class).when(restauranteRepository).delete(restauranteId);
+
+        assertThrows(EntityInUseException.class, () -> restauranteService.delete(restauranteId));
+    }
+
+    @Test
+    void shouldThrowEntityNotFoundException() {
+        var restauranteId = 1L;
+
+        doThrow(EmptyResultDataAccessException.class).when(restauranteRepository).delete(restauranteId);
+
+        assertThrows(EntityNotFoundException.class, () -> restauranteService.delete(restauranteId));
     }
 
 }

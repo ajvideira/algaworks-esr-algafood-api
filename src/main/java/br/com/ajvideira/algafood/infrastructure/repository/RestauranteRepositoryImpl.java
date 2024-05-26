@@ -2,6 +2,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Restaurante;
@@ -36,8 +37,13 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
 
     @Transactional
     @Override
-    public void delete(Restaurante restaurante) {
-        restaurante = findById(restaurante.getId());
+    public void delete(Long restauranteId) {
+        var restaurante = findById(restauranteId);
+
+        if (restaurante == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         this.entityManager.remove(restaurante);
     }
 

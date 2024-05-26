@@ -3,6 +3,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cozinha;
@@ -80,20 +82,15 @@ class RestauranteRepositoryImplTest {
     }
 
     @Test
-    void shouldDeleteManagedEntity() {
-        Restaurante restaurante = restauranteRepository.findById(1L);
-        restauranteRepository.delete(restaurante);
+    void shouldDeleteEntity() {
+        restauranteRepository.delete(1L);
 
         assertNull(restauranteRepository.findById(1L));
     }
 
     @Test
-    void shouldDeleteNonManagedEntity() {
-        Restaurante restaurante = new Restaurante();
-        restaurante.setId(2L);
-        restauranteRepository.delete(restaurante);
-
-        assertNull(restauranteRepository.findById(2L));
+    void shouldThrowExceptionWhenEntityNotFound() {
+        assertThrows(EmptyResultDataAccessException.class, () -> restauranteRepository.delete(10L));
     }
 
 }

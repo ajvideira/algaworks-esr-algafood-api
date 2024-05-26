@@ -1,6 +1,8 @@
 package br.com.ajvideira.algafood.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
 import br.com.ajvideira.algafood.domain.service.RestauranteService;
@@ -144,6 +147,45 @@ class RestauranteControllerTest {
         var response = restauranteController.update(1L, restauranteRequest);
 
         assertEquals(expected, response);
+    }
+
+    @Test
+    void shouldReturnNoContentWhenCallDeleteWithExistentCozinha() {
+        var expected = ResponseEntity.noContent().build();
+
+        doNothing().when(restauranteService).delete(1L);
+
+        var restauranteIdRequest = 1L;
+
+        var response = restauranteController.delete(restauranteIdRequest);
+
+        assertEquals(expected, response);
+    }
+
+    @Test
+    void shouldReturnConflictWhenCallDeleteWithCozinhaInUse() {
+        var expected = ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        doThrow(EntityInUseException.class).when(restauranteService).delete(1L);
+
+        var restauranteIdRequest = 1L;
+
+        var response = restauranteController.delete(restauranteIdRequest);
+
+        assertEquals(expected.getStatusCode(), response.getStatusCode());
+    }
+
+    @Test
+    void shouldReturnNotFoundtWhenCallDeleteWithNonExistentCozinha() {
+        var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        doThrow(EntityNotFoundException.class).when(restauranteService).delete(1L);
+
+        var restauranteIdRequest = 1L;
+
+        var response = restauranteController.delete(restauranteIdRequest);
+
+        assertEquals(expected.getStatusCode(), response.getStatusCode());
     }
 
 }
