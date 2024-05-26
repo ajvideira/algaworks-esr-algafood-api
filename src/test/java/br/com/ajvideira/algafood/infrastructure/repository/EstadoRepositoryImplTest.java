@@ -3,12 +3,14 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Estado;
@@ -66,20 +68,15 @@ class EstadoRepositoryImplTest {
     }
 
     @Test
-    void shouldDeleteManagedEntity() {
-        Estado estado = estadoRepository.findById(1L);
-        estadoRepository.delete(estado);
+    void shouldDeleteEntity() {
+        estadoRepository.delete(4L);
 
-        assertNull(estadoRepository.findById(1L));
+        assertNull(estadoRepository.findById(4L));
     }
 
     @Test
-    void shouldDeleteNonManagedEntity() {
-        Estado estado = new Estado();
-        estado.setId(1L);
-        estadoRepository.delete(estado);
-
-        assertNull(estadoRepository.findById(1L));
+    void shouldThrowExceptionWhenEntityNotFound() {
+        assertThrows(EmptyResultDataAccessException.class, () -> estadoRepository.delete(10L));
     }
 
 }

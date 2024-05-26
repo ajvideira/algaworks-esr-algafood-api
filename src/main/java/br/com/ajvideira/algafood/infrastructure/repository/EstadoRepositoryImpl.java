@@ -2,6 +2,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Estado;
@@ -36,8 +37,13 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
     @Transactional
     @Override
-    public void delete(Estado estado) {
-        estado = findById(estado.getId());
+    public void delete(Long estadoId) {
+        var estado = findById(estadoId);
+
+        if (estado == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         this.entityManager.remove(estado);
     }
 
