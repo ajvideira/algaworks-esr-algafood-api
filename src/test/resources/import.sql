@@ -10,12 +10,14 @@ INSERT INTO forma_pagamento (descricao) VALUES ('Crédito');
 
 INSERT INTO estado (nome) VALUES ('Rio de Janeiro');
 INSERT INTO estado (nome) VALUES ('Mato Grosso');
-INSERT INTO estado (nome) VALUES ('Sergipe');
-INSERT INTO estado (nome) VALUES ('Acre');
+INSERT INTO estado (nome) VALUES ('São Paulo');
+INSERT INTO estado (nome) VALUES ('Amazonas');
+INSERT INTO estado (nome) VALUES ('Paraná');
+INSERT INTO estado (nome) VALUES ('Santa Catarina');
 
-INSERT INTO cidade (nome) VALUES ('São Paulo');
-INSERT INTO cidade (nome) VALUES ('Manaus');
-INSERT INTO cidade (nome) VALUES ('Curitiba');
+INSERT INTO cidade (nome, estado_id) VALUES ('São Paulo', 3);
+INSERT INTO cidade (nome, estado_id) VALUES ('Manaus', 4);
+INSERT INTO cidade (nome, estado_id) VALUES ('Curitiba', 5);
 
 INSERT INTO permissao (nome, descricao) VALUES ('ROLE_ADMIN', 'Permissão de admin no sistema.');
 INSERT INTO permissao (nome, descricao) VALUES ('ROLE_OPERACIONAL', 'Permissão de tarefas operacionais.');

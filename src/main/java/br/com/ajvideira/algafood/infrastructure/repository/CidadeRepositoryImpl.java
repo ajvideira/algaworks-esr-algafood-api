@@ -2,6 +2,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cidade;
@@ -36,8 +37,13 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     @Transactional
     @Override
-    public void delete(Cidade cidade) {
-        cidade = findById(cidade.getId());
+    public void delete(Long cidadeId) {
+        var cidade = findById(cidadeId);
+
+        if (cidade == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         this.entityManager.remove(cidade);
     }
 
