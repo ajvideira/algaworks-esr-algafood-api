@@ -24,7 +24,7 @@ class EstadoRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(4, estadoRepository.findAll().size());
+        assertEquals(6, estadoRepository.findAll().size());
     }
 
     @Test
