@@ -155,7 +155,7 @@ class CidadeControllerTest {
 
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        var response = cidadeController.update(10L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(1L));
+        var response = cidadeController.partialUpdate(10L, Map.of("nome", "Cidade updated"));
 
         assertEquals(expected, response);
     }
