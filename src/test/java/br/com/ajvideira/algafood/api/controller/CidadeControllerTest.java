@@ -2,8 +2,13 @@ package br.com.ajvideira.algafood.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -120,6 +125,37 @@ class CidadeControllerTest {
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         var response = cidadeController.update(1L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(10L));
+
+        assertEquals(expected, response);
+    }
+
+    @Test
+    void shouldPartialUpdateCidadeSuccessfully() {
+        when(cidadeRepository.findById(1L)).thenReturn(CidadeMock.mock(1L, 1L));
+
+        var cidadeControllerSpy = spy(cidadeController);
+
+        doReturn(ResponseEntity.ok(CidadeMock.mock(1L, 1L))).when(cidadeControllerSpy).update(1L,
+                CidadeMock.mockForUpdateWithEstadoId(1L, 1L));
+
+        var expected = ResponseEntity.ok(CidadeMock.mock(1L, 1L));
+
+        var fields = new HashMap<String, Object>();
+        fields.put("nome", "Cidade updated");
+        fields.put("estado", Map.of("id", 1L));
+
+        var response = cidadeControllerSpy.partialUpdate(1L, fields);
+
+        assertEquals(expected, response);
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenCidadeNotExistsInPartialUpdate() {
+        when(cidadeRepository.findById(10L)).thenReturn(null);
+
+        var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        var response = cidadeController.update(10L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(1L));
 
         assertEquals(expected, response);
     }
