@@ -1,17 +1,8 @@
 package br.com.ajvideira.algafood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.ajvideira.algafood.domain.model.Cozinha;
 
-public interface CozinhaRepository {
-
-    List<Cozinha> findAll();
-
-    Cozinha findById(Long id);
-
-    Cozinha save(Cozinha cozinha);
-
-    void delete(Long id);
-
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 }

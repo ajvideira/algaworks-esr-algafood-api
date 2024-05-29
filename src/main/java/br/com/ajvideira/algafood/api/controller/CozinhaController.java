@@ -40,12 +40,7 @@ public class CozinhaController {
 
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> getById(@PathVariable Long cozinhaId) {
-        var cozinha = cozinhaRepository.findById(cozinhaId);
-        if (cozinha != null) {
-            return ResponseEntity.ok(cozinha);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.of(cozinhaRepository.findById(cozinhaId));
     }
 
     @PostMapping
@@ -55,7 +50,7 @@ public class CozinhaController {
 
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> update(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinhaRequest) {
-        var cozinha = cozinhaRepository.findById(cozinhaId);
+        var cozinha = cozinhaRepository.findById(cozinhaId).orElse(null);
 
         if (cozinha != null) {
             BeanUtils.copyProperties(cozinhaRequest, cozinha, "id");

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,7 @@ class CozinhaControllerTest {
 
         var expected = ResponseEntity.ok(cozinhaMock);
 
-        when(cozinhaRepository.findById(anyLong())).thenReturn(cozinhaMock);
+        when(cozinhaRepository.findById(anyLong())).thenReturn(Optional.of(cozinhaMock));
 
         var cozinha = cozinhaController.getById(anyLong());
 
@@ -64,11 +65,9 @@ class CozinhaControllerTest {
 
     @Test
     void shouldReturnNotFoundWhenCozinhaNotExists() {
-        Cozinha cozinhaMock = null;
-
         var expected = ResponseEntity.notFound().build();
 
-        when(cozinhaRepository.findById(anyLong())).thenReturn(cozinhaMock);
+        when(cozinhaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         var cozinha = cozinhaController.getById(anyLong());
 
@@ -97,7 +96,7 @@ class CozinhaControllerTest {
         var cozinhaMockFromService = new Cozinha(1L, "Jamaicana");
         var expected = ResponseEntity.ok(cozinhaMockFromService);
 
-        when(cozinhaRepository.findById(1L)).thenReturn(cozinhaMockFromRepository);
+        when(cozinhaRepository.findById(1L)).thenReturn(Optional.of(cozinhaMockFromRepository));
         when(cozinhaService.save(cozinhaMockFromService)).thenReturn(cozinhaMockFromService);
 
         var cozinhaIdRequest = 1L;
@@ -113,7 +112,7 @@ class CozinhaControllerTest {
     void shouldReturnNotFoundWhenCallUpdateWithNonExistentCozinha() {
         var expected = ResponseEntity.notFound().build();
 
-        when(cozinhaRepository.findById(1L)).thenReturn(null);
+        when(cozinhaRepository.findById(1L)).thenReturn(Optional.empty());
 
         var cozinhaIdRequest = 1L;
         var cozinhaRequest = new Cozinha();

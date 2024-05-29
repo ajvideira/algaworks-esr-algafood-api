@@ -7,6 +7,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,7 +37,7 @@ class RestauranteServiceTest {
 
     @Test
     void shouldInsertRestaurante() {
-        when(cozinhaRepository.findById(1L)).thenReturn(MockUtil.mockCozinha(1L));
+        when(cozinhaRepository.findById(1L)).thenReturn(Optional.of(MockUtil.mockCozinha(1L)));
 
         when(restauranteRepository.save(MockUtil.mockRestauranteForInsert(1L)))
                 .thenReturn(MockUtil.mockRestaurante(1L, 1L));
@@ -60,7 +62,7 @@ class RestauranteServiceTest {
         var expected = MockUtil.mockRestaurante(1L, 1L);
         expected.setNome("Restaurante updated");
 
-        when(cozinhaRepository.findById(1L)).thenReturn(MockUtil.mockCozinha(1L));
+        when(cozinhaRepository.findById(1L)).thenReturn(Optional.of(MockUtil.mockCozinha(1L)));
 
         when(restauranteRepository.save(
                 restauranteBeforePreRepositorySave))
@@ -76,7 +78,7 @@ class RestauranteServiceTest {
 
     @Test
     void shouldThrowEntityNotFoundWhenCozinhaNotFound() {
-        when(cozinhaRepository.findById(1L)).thenReturn(null);
+        when(cozinhaRepository.findById(1L)).thenReturn(Optional.empty());
 
         var restauranteRequest = MockUtil.mockRestauranteForUpdateWithCozinhaId(1L, 1L);
         restauranteRequest.setNome("Restaurante updated");

@@ -24,7 +24,11 @@ public class CozinhaService {
 
     public void delete(Long cozinhaId) {
         try {
-            this.cozinhaRepository.delete(cozinhaId);
+            cozinhaRepository.findById(cozinhaId).ifPresentOrElse(
+                    cozinha -> cozinhaRepository.delete(cozinha),
+                    () -> {
+                        throw new EmptyResultDataAccessException(1);
+                    });
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
                     String.format("Cozinha de ID #%d não pode ser removida, pois está em uso.", cozinhaId));

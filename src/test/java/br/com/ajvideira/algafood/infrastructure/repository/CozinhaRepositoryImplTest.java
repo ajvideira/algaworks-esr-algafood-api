@@ -2,15 +2,13 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cozinha;
@@ -24,7 +22,7 @@ class CozinhaRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(2, cozinhaRepository.findAll().size());
+        assertEquals(3, cozinhaRepository.findAll().size());
     }
 
     @Test
@@ -34,7 +32,7 @@ class CozinhaRepositoryImplTest {
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(cozinhaRepository.findById(10L));
+        assertTrue(cozinhaRepository.findById(10L).isEmpty());
     }
 
     @Test
@@ -48,12 +46,12 @@ class CozinhaRepositoryImplTest {
 
     @Test
     void shouldUpdateManagedEntity() {
-        Cozinha cozinha = cozinhaRepository.findById(1L);
+        Cozinha cozinha = cozinhaRepository.findById(1L).get();
         cozinha.setNome("Japonesa");
 
         cozinha = cozinhaRepository.save(cozinha);
 
-        assertEquals(cozinhaRepository.findById(cozinha.getId()), cozinha);
+        assertEquals(cozinha, cozinhaRepository.findById(cozinha.getId()).get());
     }
 
     @Test
@@ -64,19 +62,13 @@ class CozinhaRepositoryImplTest {
 
         cozinha = cozinhaRepository.save(cozinha);
 
-        assertEquals(cozinhaRepository.findById(cozinha.getId()), cozinha);
+        assertEquals(cozinha, cozinhaRepository.findById(cozinha.getId()).get());
     }
 
     @Test
     void shouldDeleteEntity() {
-        cozinhaRepository.delete(1L);
+        cozinhaRepository.deleteById(1L);
 
-        assertNull(cozinhaRepository.findById(1L));
+        assertTrue(cozinhaRepository.findById(1L).isEmpty());
     }
-
-    @Test
-    void shouldThrowExceptionWhenEntityNotFound() {
-        assertThrows(EmptyResultDataAccessException.class, () -> cozinhaRepository.delete(10L));
-    }
-
 }

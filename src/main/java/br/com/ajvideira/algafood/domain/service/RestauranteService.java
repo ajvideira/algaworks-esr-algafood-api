@@ -24,7 +24,7 @@ public class RestauranteService {
     }
 
     public Restaurante save(Restaurante restaurante) {
-        Cozinha cozinha = cozinhaRepository.findById(restaurante.getCozinha().getId());
+        Cozinha cozinha = cozinhaRepository.findById(restaurante.getCozinha().getId()).orElse(null);
 
         if (cozinha == null) {
             throw new EntityNotFoundException(
