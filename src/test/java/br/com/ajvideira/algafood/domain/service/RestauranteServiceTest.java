@@ -21,7 +21,8 @@ import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
-import br.com.ajvideira.algafood.util.MockUtil;
+import br.com.ajvideira.algafood.util.mock.CozinhaMock;
+import br.com.ajvideira.algafood.util.mock.RestauranteMock;
 
 @ExtendWith(MockitoExtension.class)
 class RestauranteServiceTest {
@@ -37,51 +38,46 @@ class RestauranteServiceTest {
 
     @Test
     void shouldInsertRestaurante() {
-        when(cozinhaRepository.findById(1L)).thenReturn(Optional.of(MockUtil.mockCozinha(1L)));
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        when(restauranteRepository.save(MockUtil.mockRestauranteForInsert(1L)))
-                .thenReturn(MockUtil.mockRestaurante(1L, 1L));
+        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
 
-        var expected = MockUtil.mockRestaurante(1L, 1L);
+        when(restauranteRepository.save(RestauranteMock.mockForInsertWithFullCozinha(cozinhaId)))
+                .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(1L);
+        var expected = RestauranteMock.mock(cozinhaId, restauranteId);
 
-        var response = restauranteService.save(restauranteRequest);
+        var response = restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldUpdateRestaurante() {
-        var restauranteBeforePreRepositorySave = MockUtil.mockRestaurante(1L, 1L);
-        restauranteBeforePreRepositorySave.setNome("Restaurante updated");
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        var restauranteMockAfterRepositorySave = MockUtil.mockRestaurante(1L, 1L);
-        restauranteMockAfterRepositorySave.setNome("Restaurante updated");
-
-        var expected = MockUtil.mockRestaurante(1L, 1L);
-        expected.setNome("Restaurante updated");
-
-        when(cozinhaRepository.findById(1L)).thenReturn(Optional.of(MockUtil.mockCozinha(1L)));
+        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
 
         when(restauranteRepository.save(
-                restauranteBeforePreRepositorySave))
-                .thenReturn(restauranteMockAfterRepositorySave);
+                RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId)))
+                .thenReturn(RestauranteMock.mock(1L, cozinhaId));
 
-        var restauranteRequest = MockUtil.mockRestauranteForUpdateWithCozinhaId(1L, 1L);
-        restauranteRequest.setNome("Restaurante updated");
+        var expected = RestauranteMock.mock(restauranteId, cozinhaId);
 
-        var response = restauranteService.save(restauranteRequest);
+        var response = restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldThrowEntityNotFoundWhenCozinhaNotFound() {
-        when(cozinhaRepository.findById(1L)).thenReturn(Optional.empty());
+        var cozinhaId = 1L;
 
-        var restauranteRequest = MockUtil.mockRestauranteForUpdateWithCozinhaId(1L, 1L);
-        restauranteRequest.setNome("Restaurante updated");
+        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.empty());
+
+        var restauranteRequest = RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId);
 
         assertThrows(EntityNotFoundException.class, () -> restauranteService.save(restauranteRequest));
     }

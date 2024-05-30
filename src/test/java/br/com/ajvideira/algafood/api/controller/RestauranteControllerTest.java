@@ -17,7 +17,7 @@ import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
 import br.com.ajvideira.algafood.domain.service.RestauranteService;
-import br.com.ajvideira.algafood.util.MockUtil;
+import br.com.ajvideira.algafood.util.mock.RestauranteMock;
 
 @ExtendWith(MockitoExtension.class)
 class RestauranteControllerTest {
@@ -33,9 +33,9 @@ class RestauranteControllerTest {
 
     @Test
     void shouldReturnAllRestaurantes() {
-        when(restauranteRepository.findAll()).thenReturn(MockUtil.mockRestaurantes());
+        when(restauranteRepository.findAll()).thenReturn(RestauranteMock.mockList());
 
-        var expected = ResponseEntity.ok(MockUtil.mockRestaurantes());
+        var expected = ResponseEntity.ok(RestauranteMock.mockList());
 
         var response = restauranteController.getAll();
 
@@ -44,9 +44,12 @@ class RestauranteControllerTest {
 
     @Test
     void shouldReturnRestauranteWhenExists() {
-        when(restauranteRepository.findById(1L)).thenReturn(MockUtil.mockRestaurante(1L, 1L));
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        var expected = ResponseEntity.ok(MockUtil.mockRestaurante(1L, 1L));
+        when(restauranteRepository.findById(restauranteId)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
+
+        var expected = ResponseEntity.ok(RestauranteMock.mock(restauranteId, cozinhaId));
 
         var response = restauranteController.getById(1L);
 
@@ -66,85 +69,80 @@ class RestauranteControllerTest {
 
     @Test
     void shouldCreateRestauranteSuccessfully() {
-        var restauranteMockBeforeServiceSave = MockUtil.mockRestauranteForInsert(1L);
-        var restauranteMockAfterServiceSave = MockUtil.mockRestaurante(4L, 1L);
-        when(restauranteService.save(restauranteMockBeforeServiceSave)).thenReturn(restauranteMockAfterServiceSave);
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        var expected = ResponseEntity.status(HttpStatus.CREATED).body(MockUtil.mockRestaurante(4L, 1L));
+        when(restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId)))
+                .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var restauranteRequest = MockUtil.mockRestauranteForInsert(1L);
+        var expected = ResponseEntity.status(HttpStatus.CREATED).body(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var response = restauranteController.create(restauranteRequest);
+        var response = restauranteController.create(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnBadRequestWhenCozinhaNotExistsInCreate() {
-        var restauranteMockBeforeServiceSave = MockUtil.mockRestauranteForInsertWithCozinhaId(10L);
-        when(restauranteService.save(restauranteMockBeforeServiceSave)).thenThrow(EntityNotFoundException.class);
+        var cozinhaId = 1L;
+
+        when(restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId)))
+                .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(10L);
-
-        var response = restauranteController.create(restauranteRequest);
+        var response = restauranteController.create(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldUpdateRestauranteSuccessfully() {
-        when(restauranteRepository.findById(1L)).thenReturn(MockUtil.mockRestaurante(1L, 1L));
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        var restauranteMockBeforeServiceSave = MockUtil.mockRestaurante(1L, 1L);
-        restauranteMockBeforeServiceSave.setNome("Restaurante Updated");
+        when(restauranteRepository.findById(1L)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var restauranteMockAfterServiceSave = MockUtil.mockRestaurante(1L, 1L);
-        restauranteMockAfterServiceSave.setNome("Restaurante Updated");
+        when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
+                .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        when(restauranteService.save(restauranteMockBeforeServiceSave)).thenReturn(restauranteMockAfterServiceSave);
+        var expected = ResponseEntity.ok(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var restauranteExpected = MockUtil.mockRestaurante(1L, 1L);
-        restauranteExpected.setNome("Restaurante Updated");
-
-        var expected = ResponseEntity.ok(restauranteExpected);
-
-        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(1L);
-        restauranteRequest.setNome("Restaurante Updated");
-
-        var response = restauranteController.update(1L, restauranteRequest);
+        var response = restauranteController.update(restauranteId,
+                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnNotFoundWhenRestauranteNotExistsInUpdate() {
-        when(restauranteRepository.findById(10L)).thenReturn(null);
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
+
+        when(restauranteRepository.findById(restauranteId)).thenReturn(null);
 
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(1L);
-
-        var response = restauranteController.update(10L, restauranteRequest);
+        var response = restauranteController.update(restauranteId,
+                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnBadRequestWhenCozinhaNotExistsInUpdate() {
-        when(restauranteRepository.findById(1L)).thenReturn(MockUtil.mockRestaurante(1L, 1L));
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
 
-        var restauranteMockBeforeServiceSave = MockUtil.mockRestauranteForUpdateWithCozinhaId(1L, 10L);
-        restauranteMockBeforeServiceSave.setNome("Restaurante updated");
-        when(restauranteService.save(restauranteMockBeforeServiceSave)).thenThrow(EntityNotFoundException.class);
+        when(restauranteRepository.findById(restauranteId)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
+
+        when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
+                .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        var restauranteRequest = MockUtil.mockRestauranteForInsertWithCozinhaId(10L);
-        restauranteRequest.setNome("Restaurante updated");
-
-        var response = restauranteController.update(1L, restauranteRequest);
+        var response = restauranteController.update(restauranteId,
+                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
 
         assertEquals(expected, response);
     }

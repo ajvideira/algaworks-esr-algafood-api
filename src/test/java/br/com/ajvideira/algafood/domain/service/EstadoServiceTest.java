@@ -17,8 +17,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
-import br.com.ajvideira.algafood.domain.model.Estado;
 import br.com.ajvideira.algafood.domain.repository.EstadoRepository;
+import br.com.ajvideira.algafood.util.mock.EstadoMock;
 
 @ExtendWith(MockitoExtension.class)
 class EstadoServiceTest {
@@ -31,11 +31,11 @@ class EstadoServiceTest {
 
     @Test
     void shouldSaveSuccessfully() {
-        var expected = new Estado(1L, "São Paulo");
+        when(estadoRepository.save(EstadoMock.mockForInsert(1L))).thenReturn(EstadoMock.mock(1L));
 
-        when(estadoRepository.save(new Estado(null, "São Paulo"))).thenReturn(new Estado(1L, "São Paulo"));
+        var expected = EstadoMock.mock(1L);
 
-        var response = estadoService.save(new Estado(null, "São Paulo"));
+        var response = estadoService.save(EstadoMock.mockForInsert(1L));
 
         assertEquals(expected, response);
     }

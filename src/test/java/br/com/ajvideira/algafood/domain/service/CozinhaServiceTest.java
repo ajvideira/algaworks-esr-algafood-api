@@ -17,9 +17,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
-import br.com.ajvideira.algafood.domain.model.Cozinha;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
-import br.com.ajvideira.algafood.util.MockUtil;
+import br.com.ajvideira.algafood.util.mock.CozinhaMock;
 
 @ExtendWith(MockitoExtension.class)
 class CozinhaServiceTest {
@@ -32,7 +31,7 @@ class CozinhaServiceTest {
 
     @Test
     void shouldSaveCozinha() {
-        Cozinha cozinha = new Cozinha(1L, "Espanhola");
+        var cozinha = CozinhaMock.mock(1L);
 
         when(cozinhaRepository.save(cozinha)).thenReturn(cozinha);
 
@@ -43,9 +42,9 @@ class CozinhaServiceTest {
     void shouldDeleteWithSuccess() {
         var cozinhaId = 3L;
 
-        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(MockUtil.mockCozinha(3L)));
+        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
 
-        doNothing().when(cozinhaRepository).delete(MockUtil.mockCozinha(3L));
+        doNothing().when(cozinhaRepository).delete(CozinhaMock.mock(cozinhaId));
 
         assertDoesNotThrow(() -> cozinhaService.delete(cozinhaId));
     }
@@ -54,9 +53,9 @@ class CozinhaServiceTest {
     void shouldThrowEntityInUseException() {
         var cozinhaId = 1L;
 
-        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(MockUtil.mockCozinha(1L)));
+        when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
 
-        doThrow(DataIntegrityViolationException.class).when(cozinhaRepository).delete(MockUtil.mockCozinha(1L));
+        doThrow(DataIntegrityViolationException.class).when(cozinhaRepository).delete(CozinhaMock.mock(cozinhaId));
 
         assertThrows(EntityInUseException.class, () -> cozinhaService.delete(cozinhaId));
     }
