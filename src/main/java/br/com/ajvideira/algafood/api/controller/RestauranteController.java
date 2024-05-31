@@ -40,13 +40,7 @@ public class RestauranteController {
 
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> getById(@PathVariable Long restauranteId) {
-        Restaurante restaurante = restauranteRepository.findById(restauranteId);
-
-        if (restaurante != null) {
-            return ResponseEntity.ok(restaurante);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.of(restauranteRepository.findById(restauranteId));
     }
 
     @PostMapping
@@ -62,7 +56,7 @@ public class RestauranteController {
     public ResponseEntity<Restaurante> update(@PathVariable Long restauranteId,
             @RequestBody Restaurante restauranteRequest) {
         try {
-            var restaurante = restauranteRepository.findById(restauranteId);
+            var restaurante = restauranteRepository.findById(restauranteId).orElse(null);
 
             if (restaurante != null) {
                 BeanUtils.copyProperties(restauranteRequest, restaurante, "id");

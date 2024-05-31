@@ -5,6 +5,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,7 +49,8 @@ class RestauranteControllerTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        when(restauranteRepository.findById(restauranteId)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
+        when(restauranteRepository.findById(restauranteId))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
 
         var expected = ResponseEntity.ok(RestauranteMock.mock(restauranteId, cozinhaId));
 
@@ -58,11 +61,13 @@ class RestauranteControllerTest {
 
     @Test
     void shouldReturnNotFoundWhenRestauranteNotExists() {
-        when(restauranteRepository.findById(1L)).thenReturn(null);
+        var restauranteId = 1L;
+
+        when(restauranteRepository.findById(restauranteId)).thenReturn(Optional.empty());
 
         var expected = ResponseEntity.notFound().build();
 
-        var response = restauranteController.getById(1L);
+        var response = restauranteController.getById(restauranteId);
 
         assertEquals(expected, response);
     }
@@ -101,7 +106,8 @@ class RestauranteControllerTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        when(restauranteRepository.findById(1L)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
+        when(restauranteRepository.findById(1L))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
 
         when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
                 .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
@@ -119,7 +125,7 @@ class RestauranteControllerTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        when(restauranteRepository.findById(restauranteId)).thenReturn(null);
+        when(restauranteRepository.findById(restauranteId)).thenReturn(Optional.empty());
 
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -134,7 +140,8 @@ class RestauranteControllerTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        when(restauranteRepository.findById(restauranteId)).thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
+        when(restauranteRepository.findById(restauranteId))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
 
         when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
                 .thenThrow(EntityNotFoundException.class);
@@ -149,39 +156,39 @@ class RestauranteControllerTest {
 
     @Test
     void shouldReturnNoContentWhenCallDeleteWithExistentCozinha() {
+        var restauranteId = 1L;
+
+        doNothing().when(restauranteService).delete(restauranteId);
+
         var expected = ResponseEntity.noContent().build();
 
-        doNothing().when(restauranteService).delete(1L);
-
-        var restauranteIdRequest = 1L;
-
-        var response = restauranteController.delete(restauranteIdRequest);
+        var response = restauranteController.delete(restauranteId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnConflictWhenCallDeleteWithCozinhaInUse() {
+        var restauranteId = 1L;
+
+        doThrow(EntityInUseException.class).when(restauranteService).delete(restauranteId);
+
         var expected = ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        doThrow(EntityInUseException.class).when(restauranteService).delete(1L);
-
-        var restauranteIdRequest = 1L;
-
-        var response = restauranteController.delete(restauranteIdRequest);
+        var response = restauranteController.delete(restauranteId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void shouldReturnNotFoundtWhenCallDeleteWithNonExistentCozinha() {
+        var restauranteId = 1L;
+
+        doThrow(EntityNotFoundException.class).when(restauranteService).delete(restauranteId);
+
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        doThrow(EntityNotFoundException.class).when(restauranteService).delete(1L);
-
-        var restauranteIdRequest = 1L;
-
-        var response = restauranteController.delete(restauranteIdRequest);
+        var response = restauranteController.delete(restauranteId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }

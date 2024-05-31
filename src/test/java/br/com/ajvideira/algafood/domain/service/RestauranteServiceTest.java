@@ -85,8 +85,12 @@ class RestauranteServiceTest {
     @Test
     void shouldDeleteWithSuccess() {
         var restauranteId = 1L;
+        var cozinhaId = 1L;
 
-        doNothing().when(restauranteRepository).delete(restauranteId);
+        when(restauranteRepository.findById(restauranteId))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
+
+        doNothing().when(restauranteRepository).delete(RestauranteMock.mock(restauranteId, cozinhaId));
 
         assertDoesNotThrow(() -> restauranteService.delete(restauranteId));
     }
@@ -94,8 +98,13 @@ class RestauranteServiceTest {
     @Test
     void shouldThrowEntityInUseException() {
         var restauranteId = 1L;
+        var cozinhaId = 1L;
 
-        doThrow(DataIntegrityViolationException.class).when(restauranteRepository).delete(restauranteId);
+        when(restauranteRepository.findById(restauranteId))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
+
+        doThrow(DataIntegrityViolationException.class).when(restauranteRepository).delete(
+                RestauranteMock.mock(restauranteId, cozinhaId));
 
         assertThrows(EntityInUseException.class, () -> restauranteService.delete(restauranteId));
     }
@@ -103,8 +112,13 @@ class RestauranteServiceTest {
     @Test
     void shouldThrowEntityNotFoundException() {
         var restauranteId = 1L;
+        var cozinhaId = 1L;
 
-        doThrow(EmptyResultDataAccessException.class).when(restauranteRepository).delete(restauranteId);
+        when(restauranteRepository.findById(restauranteId))
+                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
+
+        doThrow(EmptyResultDataAccessException.class).when(restauranteRepository).delete(
+                RestauranteMock.mock(restauranteId, cozinhaId));
 
         assertThrows(EntityNotFoundException.class, () -> restauranteService.delete(restauranteId));
     }

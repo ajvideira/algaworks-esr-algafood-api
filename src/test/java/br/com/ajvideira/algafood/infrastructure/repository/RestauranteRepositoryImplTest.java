@@ -2,22 +2,17 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.math.BigDecimal;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
-import br.com.ajvideira.algafood.domain.model.Cozinha;
-import br.com.ajvideira.algafood.domain.model.Restaurante;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
+import br.com.ajvideira.algafood.util.mock.RestauranteMock;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 class RestauranteRepositoryImplTest {
@@ -32,23 +27,19 @@ class RestauranteRepositoryImplTest {
 
     @Test
     void shouldFindByIdExists() {
-        assertNotNull(restauranteRepository.findById(1L));
+        assertTrue(restauranteRepository.findById(1L).isPresent());
     }
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(restauranteRepository.findById(10L));
+        assertTrue(restauranteRepository.findById(10L).isEmpty());
     }
 
     @Test
     void shouldAdd() {
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(1L);
+        var cozinhaId = 1L;
 
-        Restaurante restaurante = new Restaurante();
-        restaurante.setNome("Nebraska");
-        restaurante.setCozinha(cozinha);
-        restaurante.setTaxaFrete(BigDecimal.ZERO);
+        var restaurante = RestauranteMock.mockForInsertWithFullCozinha(cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 
@@ -57,40 +48,33 @@ class RestauranteRepositoryImplTest {
 
     @Test
     void shouldUpdateManagedEntity() {
-        Restaurante restaurante = restauranteRepository.findById(1L);
-        restaurante.setNome("Madagascar");
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
+
+        var restaurante = RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 
-        assertEquals(restauranteRepository.findById(restaurante.getId()), restaurante);
+        assertEquals(restauranteRepository.findById(restaurante.getId()).get(), restaurante);
 
     }
 
     @Test
     void shouldUpdateNonManagedEntity() {
-        Restaurante restaurante = new Restaurante();
-        restaurante.setId(1L);
-        restaurante.setNome("Peppo");
-        restaurante.setTaxaFrete(new BigDecimal("12.90"));
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(1L);
-        restaurante.setCozinha(cozinha);
+        var cozinhaId = 1L;
+        var restauranteId = 1L;
+
+        var restaurante = RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 
-        assertEquals(restauranteRepository.findById(restaurante.getId()), restaurante);
+        assertEquals(restauranteRepository.findById(restaurante.getId()).get(), restaurante);
     }
 
     @Test
     void shouldDeleteEntity() {
-        restauranteRepository.delete(1L);
+        restauranteRepository.deleteById(1L);
 
-        assertNull(restauranteRepository.findById(1L));
+        assertTrue(restauranteRepository.findById(1L).isEmpty());
     }
-
-    @Test
-    void shouldThrowExceptionWhenEntityNotFound() {
-        assertThrows(EmptyResultDataAccessException.class, () -> restauranteRepository.delete(10L));
-    }
-
 }

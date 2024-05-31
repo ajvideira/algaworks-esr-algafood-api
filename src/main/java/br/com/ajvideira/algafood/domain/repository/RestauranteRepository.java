@@ -1,17 +1,8 @@
 package br.com.ajvideira.algafood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.ajvideira.algafood.domain.model.Restaurante;
 
-public interface RestauranteRepository {
-
-    List<Restaurante> findAll();
-
-    Restaurante findById(Long id);
-
-    Restaurante save(Restaurante restaurante);
-
-    void delete(Long restauranteId);
-
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 }

@@ -28,7 +28,7 @@ public class RestauranteService {
 
         if (cozinha == null) {
             throw new EntityNotFoundException(
-                    String.format("Cozinha de ID #%d não existe.", restaurante.getCozinha().getId()));
+                    String.format("Restaurante de ID #%d não existe.", restaurante.getCozinha().getId()));
         }
 
         restaurante.setCozinha(cozinha);
@@ -38,13 +38,18 @@ public class RestauranteService {
 
     public void delete(Long restauranteId) {
         try {
-            this.restauranteRepository.delete(restauranteId);
+            restauranteRepository.findById(restauranteId).ifPresentOrElse(
+                    restaurante -> restauranteRepository.delete(
+                            restaurante),
+                    () -> {
+                        throw new EmptyResultDataAccessException(1);
+                    });
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
-                    String.format("Restaurante de ID #%d não pode ser removida, pois está em uso.", restauranteId));
+                    String.format("Restaurante de ID #%d não pode ser removido, pois está em uso.", restauranteId));
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
-                    String.format("Restaurante de ID #%d não pode ser removida, pois não existe.", restauranteId));
+                    String.format("Restaurante de ID #%d não pode ser removido, pois não existe.", restauranteId));
         }
     }
 
