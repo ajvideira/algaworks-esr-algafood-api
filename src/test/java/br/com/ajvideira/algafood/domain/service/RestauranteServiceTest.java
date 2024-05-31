@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
@@ -112,13 +111,8 @@ class RestauranteServiceTest {
     @Test
     void shouldThrowEntityNotFoundException() {
         var restauranteId = 1L;
-        var cozinhaId = 1L;
 
-        when(restauranteRepository.findById(restauranteId))
-                .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
-
-        doThrow(EmptyResultDataAccessException.class).when(restauranteRepository).delete(
-                RestauranteMock.mock(restauranteId, cozinhaId));
+        when(restauranteRepository.findById(restauranteId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> restauranteService.delete(restauranteId));
     }
