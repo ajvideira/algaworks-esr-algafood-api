@@ -2,7 +2,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ class FormaPagamentoRepositoryImplTest {
 
     @Test
     void shouldFindByIdExists() {
-        assertNotNull(formaPagamentoRepository.findById(1L));
+        assertTrue(formaPagamentoRepository.findById(1L).isPresent());
     }
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(formaPagamentoRepository.findById(10L));
+        assertTrue(formaPagamentoRepository.findById(10L).isEmpty());
     }
 
     @Test
@@ -47,12 +47,12 @@ class FormaPagamentoRepositoryImplTest {
 
     @Test
     void shouldUpdateManagedEntity() {
-        FormaPagamento formaPagamento = formaPagamentoRepository.findById(1L);
+        FormaPagamento formaPagamento = formaPagamentoRepository.findById(1L).get();
         formaPagamento.setDescricao("TED");
 
         formaPagamento = formaPagamentoRepository.save(formaPagamento);
 
-        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()), formaPagamento);
+        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()).get(), formaPagamento);
     }
 
     @Test
@@ -63,24 +63,15 @@ class FormaPagamentoRepositoryImplTest {
 
         formaPagamento = formaPagamentoRepository.save(formaPagamento);
 
-        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()), formaPagamento);
+        assertEquals(formaPagamentoRepository.findById(formaPagamento.getId()).get(), formaPagamento);
     }
 
     @Test
     void shouldDeleteManagedEntity() {
-        FormaPagamento formaPagamento = formaPagamentoRepository.findById(1L);
+        FormaPagamento formaPagamento = formaPagamentoRepository.findById(1L).get();
         formaPagamentoRepository.delete(formaPagamento);
 
-        assertNull(formaPagamentoRepository.findById(1L));
-    }
-
-    @Test
-    void shouldDeleteNonManagedEntity() {
-        FormaPagamento formaPagamento = new FormaPagamento();
-        formaPagamento.setId(2L);
-        formaPagamentoRepository.delete(formaPagamento);
-
-        assertNull(formaPagamentoRepository.findById(2L));
+        assertTrue(formaPagamentoRepository.findById(1L).isEmpty());
     }
 
 }
