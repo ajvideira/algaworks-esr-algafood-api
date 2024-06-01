@@ -2,20 +2,18 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cidade;
-import br.com.ajvideira.algafood.domain.model.Estado;
 import br.com.ajvideira.algafood.domain.repository.CidadeRepository;
+import br.com.ajvideira.algafood.util.mock.CidadeMock;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 class CidadeRepositoryImplTest {
@@ -30,36 +28,33 @@ class CidadeRepositoryImplTest {
 
     @Test
     void shouldFindByIdExists() {
-        assertNotNull(cidadeRepository.findById(1L));
+        assertTrue(cidadeRepository.findById(1L).isPresent());
     }
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(cidadeRepository.findById(10L));
+        assertTrue(cidadeRepository.findById(10L).isEmpty());
     }
 
     @Test
     void shouldAdd() {
-        Cidade cidade = new Cidade();
-        cidade.setNome("Florianópolis");
+        var estadoId = 1L;
 
-        Estado estado = new Estado();
-        estado.setId(6L);
-        cidade.setEstado(estado);
+        var cidade = CidadeMock.mockForInsertWithEstadoId(estadoId);
 
         cidade = cidadeRepository.save(cidade);
-        System.out.println(cidade);
+
         assertNotNull(cidade.getId());
     }
 
     @Test
     void shouldUpdateManagedEntity() {
-        Cidade cidade = cidadeRepository.findById(1L);
+        Cidade cidade = cidadeRepository.findById(1L).get();
         cidade.setNome("Recife");
 
         cidade = cidadeRepository.save(cidade);
 
-        assertEquals(cidadeRepository.findById(cidade.getId()), cidade);
+        assertEquals(cidadeRepository.findById(cidade.getId()).get(), cidade);
     }
 
     @Test
@@ -70,19 +65,13 @@ class CidadeRepositoryImplTest {
 
         cidade = cidadeRepository.save(cidade);
 
-        assertEquals(cidadeRepository.findById(cidade.getId()), cidade);
+        assertEquals(cidadeRepository.findById(cidade.getId()).get(), cidade);
     }
 
     @Test
     void shouldDeleteEntity() {
-        cidadeRepository.delete(1L);
+        cidadeRepository.deleteById(1L);
 
-        assertNull(cidadeRepository.findById(1L));
+        assertTrue(cidadeRepository.findById(1L).isEmpty());
     }
-
-    @Test
-    void shouldThrowExceptionWhenEntityNotFound() {
-        assertThrows(EmptyResultDataAccessException.class, () -> cidadeRepository.delete(10L));
-    }
-
 }

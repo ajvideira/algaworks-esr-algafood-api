@@ -45,13 +45,7 @@ public class CidadeController {
 
     @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> getById(@PathVariable Long cidadeId) {
-        var cidade = cidadeRepository.findById(cidadeId);
-
-        if (cidade != null) {
-            return ResponseEntity.ok(cidade);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.of(cidadeRepository.findById(cidadeId));
     }
 
     @PostMapping
@@ -67,7 +61,7 @@ public class CidadeController {
     public ResponseEntity<Cidade> update(@PathVariable Long cidadeId,
             @RequestBody Cidade cidadeRequest) {
         try {
-            var cidade = cidadeRepository.findById(cidadeId);
+            var cidade = cidadeRepository.findById(cidadeId).orElse(null);
 
             if (cidade != null) {
                 BeanUtils.copyProperties(cidadeRequest, cidade, "id");
@@ -83,7 +77,7 @@ public class CidadeController {
     @PatchMapping("/{cidadeId}")
     public ResponseEntity<Cidade> partialUpdate(@PathVariable Long cidadeId,
             @RequestBody Map<String, Object> cidadeFields) {
-        var cidade = cidadeRepository.findById(cidadeId);
+        var cidade = cidadeRepository.findById(cidadeId).orElse(null);
 
         if (cidade == null) {
             return ResponseEntity.notFound().build();

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,146 +50,179 @@ class CidadeControllerTest {
 
     @Test
     void shouldReturnCidadeWhenExists() {
-        when(cidadeRepository.findById(1L)).thenReturn(CidadeMock.mock(1L, 1L));
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        var expected = ResponseEntity.ok(CidadeMock.mock(1L, 1L));
+        when(cidadeRepository.findById(1L)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
 
-        var response = cidadeController.getById(1L);
+        var expected = ResponseEntity.ok(CidadeMock.mock(cidadeId, estadoId));
+
+        var response = cidadeController.getById(cidadeId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnNotFoundWhenCidadeNotExists() {
-        when(cidadeRepository.findById(1L)).thenReturn(null);
+        var cidadeId = 1L;
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.empty());
 
         var expected = ResponseEntity.notFound().build();
 
-        var response = cidadeController.getById(1L);
+        var response = cidadeController.getById(cidadeId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldCreateCidadeSuccessfully() {
-        when(cidadeService.save(CidadeMock.mockForInsertWithEstadoId(1L))).thenReturn(CidadeMock.mock(1L, 1L));
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        var expected = ResponseEntity.status(HttpStatus.CREATED).body(CidadeMock.mock(1L, 1L));
+        when(cidadeService.save(CidadeMock.mockForInsertWithEstadoId(estadoId)))
+                .thenReturn(CidadeMock.mock(cidadeId, estadoId));
 
-        var response = cidadeController.create(CidadeMock.mockForInsertWithEstadoId(1L));
+        var expected = ResponseEntity.status(HttpStatus.CREATED).body(CidadeMock.mock(cidadeId, estadoId));
+
+        var response = cidadeController.create(CidadeMock.mockForInsertWithEstadoId(estadoId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnBadRequestWhenEstadoNotExistsInCreate() {
-        when(cidadeService.save(CidadeMock.mockForInsertWithEstadoId(10L))).thenThrow(EntityNotFoundException.class);
+        var estadoId = 1L;
+
+        when(cidadeService.save(CidadeMock.mockForInsertWithEstadoId(estadoId)))
+                .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        var response = cidadeController.create(CidadeMock.mockForInsertWithEstadoId(10L));
+        var response = cidadeController.create(CidadeMock.mockForInsertWithEstadoId(estadoId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldUpdateCidadeSuccessfully() {
-        when(cidadeRepository.findById(1L)).thenReturn(CidadeMock.mock(1L, 1L));
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        when(cidadeService.save(CidadeMock.mockForUpdateWithEstadoId(1L, 1L))).thenReturn(CidadeMock.mock(1L, 1L));
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
 
-        var expected = ResponseEntity.ok(CidadeMock.mock(1L, 1L));
+        when(cidadeService.save(CidadeMock.mockForUpdateWithEstadoId(cidadeId, estadoId)))
+                .thenReturn(CidadeMock.mock(cidadeId, estadoId));
 
-        var response = cidadeController.update(1L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(1L));
+        var expected = ResponseEntity.ok(CidadeMock.mock(cidadeId, estadoId));
+
+        var response = cidadeController.update(cidadeId, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(estadoId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnNotFoundWhenCidadeNotExistsInUpdate() {
-        when(cidadeRepository.findById(10L)).thenReturn(null);
+        var cidadeId = 1L;
+        var estadoId = 1L;
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.empty());
 
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        var response = cidadeController.update(10L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(1L));
+        var response = cidadeController.update(cidadeId, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(estadoId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnBadRequestWhenEstadoNotExistsInUpdate() {
-        when(cidadeRepository.findById(1L)).thenReturn(CidadeMock.mock(1L, 1L));
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        when(cidadeService.save(CidadeMock.mockForUpdateWithEstadoId(1L, 10L)))
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
+
+        when(cidadeService.save(CidadeMock.mockForUpdateWithEstadoId(cidadeId, estadoId)))
                 .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        var response = cidadeController.update(1L, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(10L));
+        var response = cidadeController.update(cidadeId, CidadeMock.mockForUpdateWithoutIdAndWithEstadoId(estadoId));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldPartialUpdateCidadeSuccessfully() {
-        when(cidadeRepository.findById(1L)).thenReturn(CidadeMock.mock(1L, 1L));
+        var cidadeId = 1L;
+        var estadoId = 1L;
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
 
         var cidadeControllerSpy = spy(cidadeController);
 
-        doReturn(ResponseEntity.ok(CidadeMock.mock(1L, 1L))).when(cidadeControllerSpy).update(1L,
-                CidadeMock.mockForUpdateWithEstadoId(1L, 1L));
+        doReturn(ResponseEntity.ok(CidadeMock.mock(cidadeId, estadoId))).when(cidadeControllerSpy).update(cidadeId,
+                CidadeMock.mockForUpdateWithEstadoId(cidadeId, cidadeId));
 
-        var expected = ResponseEntity.ok(CidadeMock.mock(1L, 1L));
+        var expected = ResponseEntity.ok(CidadeMock.mock(cidadeId, estadoId));
 
         var fields = new HashMap<String, Object>();
         fields.put("nome", "Cidade updated");
-        fields.put("estado", Map.of("id", 1L));
+        fields.put("estado", Map.of("id", estadoId));
 
-        var response = cidadeControllerSpy.partialUpdate(1L, fields);
+        var response = cidadeControllerSpy.partialUpdate(cidadeId, fields);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnNotFoundWhenCidadeNotExistsInPartialUpdate() {
-        when(cidadeRepository.findById(10L)).thenReturn(null);
+        var cidadeId = 1L;
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.empty());
 
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        var response = cidadeController.partialUpdate(10L, Map.of("nome", "Cidade updated"));
+        var response = cidadeController.partialUpdate(cidadeId, Map.of("nome", "Cidade updated"));
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldDeleteCidadeSuccessfully() {
-        doNothing().when(cidadeService).delete(1L);
+        var cidadeId = 1L;
+
+        doNothing().when(cidadeService).delete(cidadeId);
 
         var expected = ResponseEntity.noContent().build();
 
-        var response = cidadeController.delete(1L);
+        var response = cidadeController.delete(cidadeId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnConflictWhenCidadeInUseInDelete() {
-        doThrow(EntityInUseException.class).when(cidadeService).delete(1L);
+        var cidadeId = 1L;
+
+        doThrow(EntityInUseException.class).when(cidadeService).delete(cidadeId);
 
         var expected = ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        var response = cidadeController.delete(1L);
+        var response = cidadeController.delete(cidadeId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void shouldReturnNotFoundWhenCidadeNotExistsInDelete() {
+        var cidadeId = 1L;
+
+        doThrow(EntityNotFoundException.class).when(cidadeService).delete(cidadeId);
+
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        doThrow(EntityNotFoundException.class).when(cidadeService).delete(1L);
-
-        var response = cidadeController.delete(1L);
+        var response = cidadeController.delete(cidadeId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }

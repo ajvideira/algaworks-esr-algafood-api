@@ -38,7 +38,11 @@ public class CidadeService {
 
     public void delete(Long cidadeId) {
         try {
-            this.cidadeRepository.delete(cidadeId);
+            cidadeRepository.findById(cidadeId).ifPresentOrElse(
+                    cidade -> cidadeRepository.delete(cidade),
+                    () -> {
+                        throw new EmptyResultDataAccessException(1);
+                    });
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
                     String.format("Cidade de ID #%d não pode ser removida, pois está em uso.", cidadeId));

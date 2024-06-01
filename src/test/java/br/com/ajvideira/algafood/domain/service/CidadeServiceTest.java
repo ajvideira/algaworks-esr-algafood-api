@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
@@ -84,23 +83,36 @@ class CidadeServiceTest {
 
     @Test
     void shouldDeleteWithSuccess() {
-        doNothing().when(cidadeRepository).delete(1L);
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        assertDoesNotThrow(() -> cidadeService.delete(1L));
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
+
+        doNothing().when(cidadeRepository).delete(CidadeMock.mock(cidadeId, estadoId));
+
+        assertDoesNotThrow(() -> cidadeService.delete(cidadeId));
     }
 
     @Test
     void shouldThrowEntityInUseException() {
-        doThrow(DataIntegrityViolationException.class).when(cidadeRepository).delete(1L);
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
-        assertThrows(EntityInUseException.class, () -> cidadeService.delete(1L));
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
+
+        doThrow(DataIntegrityViolationException.class).when(cidadeRepository)
+                .delete(CidadeMock.mock(cidadeId, estadoId));
+
+        assertThrows(EntityInUseException.class, () -> cidadeService.delete(cidadeId));
     }
 
     @Test
     void shouldThrowEntityNotFoundException() {
-        doThrow(EmptyResultDataAccessException.class).when(cidadeRepository).delete(1L);
+        var cidadeId = 1L;
 
-        assertThrows(EntityNotFoundException.class, () -> cidadeService.delete(1L));
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> cidadeService.delete(cidadeId));
     }
 
 }

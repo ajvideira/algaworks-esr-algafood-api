@@ -1,20 +1,10 @@
 package br.com.ajvideira.algafood.domain.repository;
 
-import java.util.List;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Cidade;
 
 @Repository
-public interface CidadeRepository {
-
-    List<Cidade> findAll();
-
-    Cidade findById(Long id);
-
-    Cidade save(Cidade cidade);
-
-    void delete(Long id);
-
+public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 }
