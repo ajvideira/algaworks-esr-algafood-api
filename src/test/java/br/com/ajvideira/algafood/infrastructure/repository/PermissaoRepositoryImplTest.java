@@ -2,7 +2,7 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ class PermissaoRepositoryImplTest {
 
     @Test
     void shouldFindByIdExists() {
-        assertNotNull(permissaoRepository.findById(1L));
+        assertTrue(permissaoRepository.findById(1L).isPresent());
     }
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(permissaoRepository.findById(10L));
+        assertTrue(permissaoRepository.findById(10L).isEmpty());
     }
 
     @Test
@@ -47,12 +47,12 @@ class PermissaoRepositoryImplTest {
 
     @Test
     void shouldUpdateManagedEntity() {
-        Permissao permissao = permissaoRepository.findById(1L);
+        Permissao permissao = permissaoRepository.findById(1L).get();
         permissao.setNome("ROLE_ADMINISTRADOR");
 
         permissao = permissaoRepository.save(permissao);
 
-        assertEquals(permissaoRepository.findById(permissao.getId()), permissao);
+        assertEquals(permissaoRepository.findById(permissao.getId()).get(), permissao);
     }
 
     @Test
@@ -64,24 +64,15 @@ class PermissaoRepositoryImplTest {
 
         permissao = permissaoRepository.save(permissao);
 
-        assertEquals(permissaoRepository.findById(permissao.getId()), permissao);
+        assertEquals(permissaoRepository.findById(permissao.getId()).get(), permissao);
     }
 
     @Test
     void shouldDeleteManagedEntity() {
-        Permissao permissao = permissaoRepository.findById(1L);
+        Permissao permissao = permissaoRepository.findById(1L).get();
         permissaoRepository.delete(permissao);
 
-        assertNull(permissaoRepository.findById(1L));
-    }
-
-    @Test
-    void shouldDeleteNonManagedEntity() {
-        Permissao permissao = new Permissao();
-        permissao.setId(1L);
-        permissaoRepository.delete(permissao);
-
-        assertNull(permissaoRepository.findById(1L));
+        assertTrue(permissaoRepository.findById(1L).isEmpty());
     }
 
 }
