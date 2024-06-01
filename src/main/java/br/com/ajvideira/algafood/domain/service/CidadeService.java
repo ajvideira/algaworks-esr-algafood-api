@@ -24,7 +24,7 @@ public class CidadeService {
     }
 
     public Cidade save(Cidade cidade) {
-        Estado estado = estadoRepository.findById(cidade.getEstado().getId());
+        Estado estado = estadoRepository.findById(cidade.getEstado().getId()).orElse(null);
 
         if (estado == null) {
             throw new EntityNotFoundException(

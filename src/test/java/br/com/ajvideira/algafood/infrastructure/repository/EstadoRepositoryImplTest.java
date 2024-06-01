@@ -2,15 +2,13 @@ package br.com.ajvideira.algafood.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.model.Estado;
@@ -29,12 +27,12 @@ class EstadoRepositoryImplTest {
 
     @Test
     void shouldFindByIdExists() {
-        assertNotNull(estadoRepository.findById(1L));
+        assertTrue(estadoRepository.findById(1L).isPresent());
     }
 
     @Test
     void shouldNotFindByIdNotExists() {
-        assertNull(estadoRepository.findById(10L));
+        assertTrue(estadoRepository.findById(10L).isEmpty());
     }
 
     @Test
@@ -48,12 +46,12 @@ class EstadoRepositoryImplTest {
 
     @Test
     void shouldUpdateManagedEntity() {
-        Estado estado = estadoRepository.findById(1L);
+        Estado estado = estadoRepository.findById(1L).get();
         estado.setNome("Alagoas");
 
         estado = estadoRepository.save(estado);
 
-        assertEquals(estadoRepository.findById(estado.getId()), estado);
+        assertEquals(estadoRepository.findById(estado.getId()).get(), estado);
     }
 
     @Test
@@ -64,19 +62,13 @@ class EstadoRepositoryImplTest {
 
         estado = estadoRepository.save(estado);
 
-        assertEquals(estadoRepository.findById(estado.getId()), estado);
+        assertEquals(estadoRepository.findById(estado.getId()).get(), estado);
     }
 
     @Test
     void shouldDeleteEntity() {
-        estadoRepository.delete(4L);
+        estadoRepository.deleteById(4L);
 
-        assertNull(estadoRepository.findById(4L));
+        assertTrue(estadoRepository.findById(4L).isEmpty());
     }
-
-    @Test
-    void shouldThrowExceptionWhenEntityNotFound() {
-        assertThrows(EmptyResultDataAccessException.class, () -> estadoRepository.delete(10L));
-    }
-
 }

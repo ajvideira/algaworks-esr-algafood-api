@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +19,6 @@ import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.model.Estado;
 import br.com.ajvideira.algafood.domain.repository.EstadoRepository;
 import br.com.ajvideira.algafood.domain.service.EstadoService;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RequestMapping("/estados")
 @RestController
@@ -41,13 +40,7 @@ public class EstadoController {
 
     @GetMapping("/{estadoId}")
     public ResponseEntity<Estado> getById(@PathVariable Long estadoId) {
-        var estado = estadoRepository.findById(estadoId);
-
-        if (estado != null) {
-            return ResponseEntity.ok(estado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.of(estadoRepository.findById(estadoId));
     }
 
     @PostMapping
@@ -57,7 +50,7 @@ public class EstadoController {
 
     @PutMapping("/{estadoId}")
     public ResponseEntity<Estado> update(@PathVariable Long estadoId, @RequestBody Estado estadoRequest) {
-        var estado = estadoRepository.findById(estadoId);
+        var estado = estadoRepository.findById(estadoId).orElse(null);
 
         if (estado != null) {
             BeanUtils.copyProperties(estadoRequest, estado, "id");

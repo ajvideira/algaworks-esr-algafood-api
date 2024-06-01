@@ -7,13 +7,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
@@ -31,27 +32,39 @@ class EstadoServiceTest {
 
     @Test
     void shouldSaveSuccessfully() {
-        when(estadoRepository.save(EstadoMock.mockForInsert(1L))).thenReturn(EstadoMock.mock(1L));
+        var estadoId = 1L;
 
-        var expected = EstadoMock.mock(1L);
+        when(estadoRepository.save(EstadoMock.mockForInsert())).thenReturn(EstadoMock.mock(estadoId));
 
-        var response = estadoService.save(EstadoMock.mockForInsert(1L));
+        var expected = EstadoMock.mock(estadoId);
+
+        var response = estadoService.save(EstadoMock.mockForInsert());
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldDeleteSuccessfully() {
-        doNothing().when(estadoRepository).delete(4L);
+        var estadoId = 1L;
 
-        assertDoesNotThrow(() -> estadoService.delete(4L));
+        when(estadoRepository.findById(
+                estadoId))
+                .thenReturn(Optional.of(EstadoMock.mock(estadoId)));
+
+        doNothing().when(estadoRepository).delete(EstadoMock.mock(estadoId));
+
+        assertDoesNotThrow(() -> estadoService.delete(estadoId));
     }
 
     @Test
     void shouldThrowEntityInUseException() {
-        var estadoId = 4L;
+        var estadoId = 1L;
 
-        doThrow(DataIntegrityViolationException.class).when(estadoRepository).delete(estadoId);
+        when(estadoRepository.findById(
+                estadoId))
+                .thenReturn(Optional.of(EstadoMock.mock(estadoId)));
+
+        doThrow(DataIntegrityViolationException.class).when(estadoRepository).delete(EstadoMock.mock(estadoId));
 
         assertThrows(EntityInUseException.class, () -> estadoService.delete(estadoId));
     }
@@ -60,7 +73,9 @@ class EstadoServiceTest {
     void shouldThrowEntityNotFoundException() {
         var estadoId = 1L;
 
-        doThrow(EmptyResultDataAccessException.class).when(estadoRepository).delete(estadoId);
+        when(estadoRepository.findById(
+                estadoId))
+                .thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> estadoService.delete(estadoId));
     }

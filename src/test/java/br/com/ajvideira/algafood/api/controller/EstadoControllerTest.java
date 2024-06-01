@@ -5,7 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +17,9 @@ import org.springframework.http.ResponseEntity;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
-import br.com.ajvideira.algafood.domain.model.Estado;
 import br.com.ajvideira.algafood.domain.repository.EstadoRepository;
 import br.com.ajvideira.algafood.domain.service.EstadoService;
+import br.com.ajvideira.algafood.util.mock.EstadoMock;
 
 @ExtendWith(MockitoExtension.class)
 class EstadoControllerTest {
@@ -35,12 +35,9 @@ class EstadoControllerTest {
 
     @Test
     void shouldReturnAllEstados() {
-        var estadosMock = List.of(new Estado(1L, "São Paulo"), new Estado(2L, "Rio de Janeiro"),
-                new Estado(3L, "Minas Gerais"));
+        when(estadoRepository.findAll()).thenReturn(EstadoMock.mockList());
 
-        when(estadoRepository.findAll()).thenReturn(estadosMock);
-
-        var expected = ResponseEntity.ok(estadosMock);
+        var expected = ResponseEntity.ok(EstadoMock.mockList());
 
         var response = estadoController.getAll();
 
@@ -49,91 +46,105 @@ class EstadoControllerTest {
 
     @Test
     void shouldReturnEstadoWhenExists() {
-        var expected = ResponseEntity.ok(new Estado(1L, "Rio de Janeiro"));
+        var estadoId = 1L;
 
-        when(estadoRepository.findById(1L)).thenReturn(new Estado(1L, "Rio de Janeiro"));
+        when(estadoRepository.findById(estadoId)).thenReturn(Optional.of(EstadoMock.mock(estadoId)));
 
-        var response = estadoController.getById(1L);
+        var expected = ResponseEntity.ok(EstadoMock.mock(estadoId));
+
+        var response = estadoController.getById(estadoId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnNotFoundWhenEstadoNotExists() {
+        var estadoId = 1L;
+
+        when(estadoRepository.findById(estadoId)).thenReturn(Optional.empty());
+
         var expected = ResponseEntity.notFound().build();
 
-        when(estadoRepository.findById(1L)).thenReturn(null);
-
-        var response = estadoController.getById(1L);
+        var response = estadoController.getById(estadoId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldCreateEstadoSuccessfully() {
-        var expected = ResponseEntity.status(HttpStatus.CREATED).body(new Estado(1L, "Rio de Janeiro"));
+        var estadoId = 1L;
 
-        when(estadoService.save(new Estado(null, "Rio de Janeiro"))).thenReturn(new Estado(1L, "Rio de Janeiro"));
+        when(estadoService.save(EstadoMock.mockForInsert())).thenReturn(EstadoMock.mock(estadoId));
 
-        var response = estadoController.create(new Estado(null, "Rio de Janeiro"));
+        var expected = ResponseEntity.status(HttpStatus.CREATED).body(EstadoMock.mock(estadoId));
+
+        var response = estadoController.create(EstadoMock.mockForInsert());
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldUpdateEstadoSuccessfully() {
-        var expected = ResponseEntity.status(HttpStatus.OK).body(new Estado(1L, "Goiás"));
+        var estadoId = 1L;
 
-        when(estadoRepository.findById(1L)).thenReturn(new Estado(1L, "Rio de Janeiro"));
-        when(estadoService.save(new Estado(1L, "Goiás"))).thenReturn(new Estado(1L, "Goiás"));
+        when(estadoRepository.findById(estadoId)).thenReturn(Optional.of(EstadoMock.mock(estadoId)));
+        when(estadoService.save(EstadoMock.mockForUpdate(estadoId))).thenReturn(EstadoMock.mock(estadoId));
 
-        var response = estadoController.update(1L, new Estado(null, "Goiás"));
+        var expected = ResponseEntity.status(HttpStatus.OK).body(EstadoMock.mock(estadoId));
+
+        var response = estadoController.update(estadoId, EstadoMock.mockForUpdateWithoutId());
 
         assertEquals(expected, response);
     }
 
     @Test
-    void shouldReturnNotFoundWhenCallUpdateWithNonExistentCozinhaId() {
+    void shouldReturnNotFoundWhenCallUpdateWithNonExistentEstadoId() {
+        var estadoId = 1L;
+
+        when(estadoRepository.findById(estadoId)).thenReturn(Optional.empty());
+
         var expected = ResponseEntity.notFound().build();
 
-        when(estadoRepository.findById(1L)).thenReturn(null);
-
-        var response = estadoController.update(1L, new Estado(null, "Rio de Janeiro"));
+        var response = estadoController.update(estadoId, EstadoMock.mockForUpdateWithoutId());
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldDeleteEstadoSuccessfully() {
+        var estadoId = 1L;
+
+        doNothing().when(estadoService).delete(estadoId);
+
         var expected = ResponseEntity.noContent().build();
 
-        doNothing().when(estadoService).delete(1L);
-
-        var cozinhaIdRequest = 1L;
-
-        var response = estadoController.delete(cozinhaIdRequest);
+        var response = estadoController.delete(estadoId);
 
         assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnConflictWhenCallDeleteWithCozinhaInUse() {
+        var estadoId = 1L;
+
+        doThrow(EntityInUseException.class).when(estadoService).delete(estadoId);
+
         var expected = ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        doThrow(EntityInUseException.class).when(estadoService).delete(1L);
-
-        var response = estadoController.delete(1L);
+        var response = estadoController.delete(estadoId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void shouldReturnNotFoundtWhenCallDeleteWithNonExistentCozinha() {
+        var estadoId = 1L;
+
+        doThrow(EntityNotFoundException.class).when(estadoService).delete(estadoId);
+
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        doThrow(EntityNotFoundException.class).when(estadoService).delete(1L);
-
-        var response = estadoController.delete(1L);
+        var response = estadoController.delete(estadoId);
 
         assertEquals(expected.getStatusCode(), response.getStatusCode());
     }

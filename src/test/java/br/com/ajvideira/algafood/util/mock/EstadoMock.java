@@ -10,7 +10,7 @@ public class EstadoMock {
         return new Estado(estadoId, "Estado " + estadoId);
     }
 
-    public static Estado mockForInsert(Long estadoId) {
+    public static Estado mockForInsert() {
         return new Estado(null, "New Estado");
     }
 
@@ -18,7 +18,7 @@ public class EstadoMock {
         return new Estado(estadoId, "Estado updated");
     }
 
-    public static Estado mockForUpdateWithoutId(Long estadoId) {
+    public static Estado mockForUpdateWithoutId() {
         return new Estado(null, "Estado updated");
     }
 

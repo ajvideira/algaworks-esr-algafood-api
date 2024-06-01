@@ -24,7 +24,11 @@ public class EstadoService {
 
     public void delete(Long estadoId) {
         try {
-            this.estadoRepository.delete(estadoId);
+            estadoRepository.findById(estadoId).ifPresentOrElse(
+                    estado -> estadoRepository.delete(estado),
+                    () -> {
+                        throw new EmptyResultDataAccessException(1);
+                    });
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
                     String.format("Estado de ID #%d não pode ser removido, pois está em uso.", estadoId));
