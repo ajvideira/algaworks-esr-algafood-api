@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static br.com.ajvideira.algafood.infrastructure.repository.specification.RestauranteSpecification.*;
+
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
+
 import br.com.ajvideira.algafood.util.mock.RestauranteMock;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
@@ -26,7 +29,7 @@ class RestauranteRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(3, restauranteRepository.findAll().size());
+        assertEquals(4, restauranteRepository.findAll().size());
     }
 
     @Test
@@ -43,13 +46,27 @@ class RestauranteRepositoryImplTest {
             "k,1,15,2",
             "w,,,1",
             ",1,10,2",
-            ",,,3",
+            ",,,4",
             "dsdsd,1,10,0",
     })
     @ParameterizedTest()
     void shouldFindByParameters(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal,
             Integer expectedSize) {
         var response = restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+
+        assertEquals(expectedSize, response.size());
+    }
+
+    @CsvSource(value = {
+            "k,0",
+            "Na,1",
+            ",1",
+            "dsdsd,0",
+    })
+    @ParameterizedTest()
+    void shouldFindBySpecifications(String nome,
+            Integer expectedSize) {
+        var response = restauranteRepository.findAll(comNomeSemelhante(nome).and(comFreteGratis()));
 
         assertEquals(expectedSize, response.size());
     }
