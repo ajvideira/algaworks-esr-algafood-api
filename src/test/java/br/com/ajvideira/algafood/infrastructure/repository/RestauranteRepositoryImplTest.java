@@ -4,7 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,6 +37,21 @@ class RestauranteRepositoryImplTest {
     @Test
     void shouldNotFindByIdNotExists() {
         assertTrue(restauranteRepository.findById(10L).isEmpty());
+    }
+
+    @CsvSource(value = {
+            "k,1,15,2",
+            "w,,,1",
+            ",1,10,2",
+            ",,,3",
+            "dsdsd,1,10,0",
+    })
+    @ParameterizedTest()
+    void shouldFindByParameters(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal,
+            Integer expectedSize) {
+        var response = restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+
+        assertEquals(expectedSize, response.size());
     }
 
     @Test
