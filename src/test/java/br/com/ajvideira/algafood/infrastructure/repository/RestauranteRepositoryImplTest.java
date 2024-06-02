@@ -72,6 +72,13 @@ class RestauranteRepositoryImplTest {
     }
 
     @Test
+    void shouldFindFirst() {
+        var response = restauranteRepository.findFirst();
+
+        assertEquals(1L, response.get().getId());
+    }
+
+    @Test
     void shouldAdd() {
         var cozinhaId = 1L;
 
