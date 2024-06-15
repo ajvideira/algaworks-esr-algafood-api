@@ -1,5 +1,6 @@
 INSERT INTO cozinha (nome) VALUES ('Tailandesa');
 INSERT INTO cozinha (nome) VALUES ('Indiana');
+INSERT INTO cozinha (nome) VALUES ('Italiana');
 
 INSERT INTO restaurante (nome, taxa_frete, cozinha_id) VALUES ('Wok Thai Food', 9.90, 1);
 INSERT INTO restaurante (nome, taxa_frete, cozinha_id) VALUES ('Tuk tuk', 13.50, 1);
@@ -8,6 +9,15 @@ INSERT INTO restaurante (nome, taxa_frete, cozinha_id) VALUES ('Namaste', 0, 2);
 
 INSERT INTO forma_pagamento (descricao) VALUES ('Débito');
 INSERT INTO forma_pagamento (descricao) VALUES ('Crédito');
+INSERT INTO forma_pagamento (descricao) VALUES ('Pix');
+
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 1);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 2);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 3);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (2, 1);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (1, 2);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (3, 1);
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES (4, 1);
 
 INSERT INTO estado (nome) VALUES ('Rio de Janeiro');
 INSERT INTO estado (nome) VALUES ('Mato Grosso');

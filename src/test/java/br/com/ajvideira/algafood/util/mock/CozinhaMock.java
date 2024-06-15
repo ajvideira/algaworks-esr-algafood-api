@@ -15,11 +15,11 @@ public class CozinhaMock {
     }
 
     public static Cozinha mockForUpdate(Long cozinhaId) {
-        return new Cozinha(cozinhaId, "Cozinha updated");
+        return new Cozinha(cozinhaId, "Cozinha " + cozinhaId + " updated");
     }
 
     public static Cozinha mockForUpdateWithoutId(Long cozinhaId) {
-        return new Cozinha(null, "Cozinha updated");
+        return new Cozinha(null, "Cozinha " + cozinhaId + " updated");
     }
 
     public static List<Cozinha> mockList() {

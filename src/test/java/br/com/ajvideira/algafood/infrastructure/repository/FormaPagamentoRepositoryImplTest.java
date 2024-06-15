@@ -22,7 +22,7 @@ class FormaPagamentoRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(2, formaPagamentoRepository.findAll().size());
+        assertEquals(3, formaPagamentoRepository.findAll().size());
     }
 
     @Test

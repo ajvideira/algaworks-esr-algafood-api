@@ -66,7 +66,7 @@ class RestauranteRepositoryImplTest {
     @ParameterizedTest()
     void shouldFindBySpecifications(String nome,
             Integer expectedSize) {
-        var response = restauranteRepository.findAll(comNomeSemelhante(nome).and(comFreteGratis()));
+        var response = restauranteRepository.findAll(comNomeSemelhante(nome).and(comTaxaFreteGratis()));
 
         assertEquals(expectedSize, response.size());
     }

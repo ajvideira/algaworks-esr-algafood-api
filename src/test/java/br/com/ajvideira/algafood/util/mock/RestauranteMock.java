@@ -9,30 +9,32 @@ public class RestauranteMock {
 
     public static Restaurante mock(Long restauranteId, Long cozinhaId) {
         return new Restaurante(restauranteId, "Restaurante " + restauranteId,
-                BigDecimal.ONE, CozinhaMock.mock(cozinhaId));
+                BigDecimal.ONE, CozinhaMock.mock(cozinhaId), FormaPagamentoMock.mockList());
     }
 
     public static Restaurante mockForInsertWithCozinhaId(Long cozinhaId) {
         return new Restaurante(null, "New Restaurante",
-                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId));
+                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockList());
     }
 
     public static Restaurante mockForInsertWithFullCozinha(Long cozinhaId) {
-        return new Restaurante(null, "New Restaurante", BigDecimal.ONE, CozinhaMock.mock(cozinhaId));
+        return new Restaurante(null, "New Restaurante", BigDecimal.ONE, CozinhaMock.mock(cozinhaId),
+                FormaPagamentoMock.mockList());
     }
 
     public static Restaurante mockForUpdateWithCozinhaId(Long restauranteId, Long cozinhaId) {
         return new Restaurante(restauranteId, "Restaurante updated", BigDecimal.ONE,
-                CozinhaMock.mockForSaveInOtherEntity(cozinhaId));
+                CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockList());
     }
 
     public static Restaurante mockForUpdateWithFullCozinha(Long restauranteId, Long cozinhaId) {
-        return new Restaurante(restauranteId, "Restaurante updated", BigDecimal.ONE, CozinhaMock.mock(cozinhaId));
+        return new Restaurante(restauranteId, "Restaurante updated", BigDecimal.ONE, CozinhaMock.mock(cozinhaId),
+                FormaPagamentoMock.mockList());
     }
 
     public static Restaurante mockForUpdateWithoutIdAndWithCozinhaId(Long cozinhaId) {
         return new Restaurante(null, "Restaurante updated",
-                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId));
+                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockList());
     }
 
     public static List<Restaurante> mockList() {

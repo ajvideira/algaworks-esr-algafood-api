@@ -16,7 +16,7 @@ public class RestauranteSpecification {
                 "%" + (nome != null ? nome.toLowerCase() : "") + "%");
     }
 
-    public static Specification<Restaurante> comFreteGratis() {
+    public static Specification<Restaurante> comTaxaFreteGratis() {
         return (root, query, builder) -> builder.equal(root.get("taxaFrete"), BigDecimal.ZERO);
     }
 
