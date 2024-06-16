@@ -20,6 +20,16 @@ INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, 
 INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Sharin', 7.30, 2, '99098678', 'Rua República', '87', '1', 'Menino Deus', 1, now(), now());
 INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Namaste', 0, 2, '98765678', 'Avenida Ipiranga', '55', '814', 'Praia de Belas', 4, now(), now());
 
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Arroz Jasmim', 'Arroz feito com muito amor.', 12.60, true, 1);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Macarrão da Nona', 'Macarrão feito pela nona Griselda.', 45.50, true, 1);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Espeto de Frango', 'Clássico espetinho de frango.', 9.90, true, 2);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Espeto de Carne', 'Clássico espetinho de carne.', 12.90, true, 2);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Esfiha de frango', 'Esfiha de frango a moda árabe.', 3.50, true, 3);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('Esfiha de carne', 'Esfiha de carne a moda árabe.', 3.50, true, 3);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('X-Coração', 'Xis de buteco de coração.', 23.50, true, 4);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('X-Filé', 'Xis de buteco de filé migon.', 28.50, true, 4);
+INSERT INTO produto (nome, descricao, preco, ativo, restaurante_id) VALUES ('X-Carne', 'Xis de buteco de carne.', 20.50, true, 4);
+
 INSERT INTO forma_pagamento (descricao) VALUES ('Débito');
 INSERT INTO forma_pagamento (descricao) VALUES ('Crédito');
 INSERT INTO forma_pagamento (descricao) VALUES ('Pix');
