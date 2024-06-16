@@ -3,6 +3,7 @@ package br.com.ajvideira.algafood.domain.service;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -91,7 +92,8 @@ class RestauranteServiceTest {
 
         var expected = RestauranteMock.mock(restauranteId, cozinhaId);
 
-        var response = restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId));
+        var response = restauranteService
+                .save(RestauranteMock.mockForUpdateWithOtherEntitiesIds(restauranteId, cozinhaId));
 
         assertEquals(expected, response);
     }
@@ -102,7 +104,33 @@ class RestauranteServiceTest {
 
         when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.empty());
 
-        var restauranteRequest = RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId);
+        var restauranteRequest = RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(cozinhaId);
+
+        assertThrows(EntityNotFoundException.class, () -> restauranteService.save(restauranteRequest));
+    }
+
+    @Test
+    void shouldThrowEntityNotFoundWhenCidadeNotFound() {
+        var cidadeId = 1L;
+
+        when(cozinhaRepository.findById(anyLong())).thenReturn(Optional.of(CozinhaMock.mock(1L)));
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.empty());
+
+        var restauranteRequest = RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(cidadeId);
+
+        assertThrows(EntityNotFoundException.class, () -> restauranteService.save(restauranteRequest));
+    }
+
+    @Test
+    void shouldThrowEntityNotFoundWhenFormaPagamentoNotFound() {
+        when(cozinhaRepository.findById(anyLong())).thenReturn(Optional.of(CozinhaMock.mock(1L)));
+
+        when(cidadeRepository.findById(anyLong())).thenReturn(Optional.of(CidadeMock.mock(1L, 1L)));
+
+        when(formaPagamentoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        var restauranteRequest = RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(1L);
 
         assertThrows(EntityNotFoundException.class, () -> restauranteService.save(restauranteRequest));
     }

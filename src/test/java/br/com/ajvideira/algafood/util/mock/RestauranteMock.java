@@ -24,9 +24,10 @@ public class RestauranteMock {
                 FormaPagamentoMock.mockList(), EnderecoMock.mock());
     }
 
-    public static Restaurante mockForUpdateWithCozinhaId(Long restauranteId, Long cozinhaId) {
+    public static Restaurante mockForUpdateWithOtherEntitiesIds(Long restauranteId, Long cozinhaId) {
         return new Restaurante(restauranteId, "Restaurante updated", BigDecimal.ONE,
-                CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockList(), EnderecoMock.mock());
+                CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockListForSaveInOtherEntity(),
+                EnderecoMock.mock());
     }
 
     public static Restaurante mockForUpdateWithFullCozinha(Long restauranteId, Long cozinhaId) {
@@ -34,9 +35,10 @@ public class RestauranteMock {
                 FormaPagamentoMock.mockList(), EnderecoMock.mock());
     }
 
-    public static Restaurante mockForUpdateWithoutIdAndWithCozinhaId(Long cozinhaId) {
+    public static Restaurante mockForUpdateWithoutIdAndWithOtherEntitiesIds(Long cozinhaId) {
         return new Restaurante(null, "Restaurante updated",
-                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId), FormaPagamentoMock.mockList(),
+                BigDecimal.ONE, CozinhaMock.mockForSaveInOtherEntity(cozinhaId),
+                FormaPagamentoMock.mockListForSaveInOtherEntity(),
                 EnderecoMock.mock());
     }
 

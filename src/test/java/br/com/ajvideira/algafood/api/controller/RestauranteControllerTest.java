@@ -109,13 +109,13 @@ class RestauranteControllerTest {
         when(restauranteRepository.findById(1L))
                 .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
 
-        when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
+        when(restauranteService.save(RestauranteMock.mockForUpdateWithOtherEntitiesIds(restauranteId, cozinhaId)))
                 .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
         var expected = ResponseEntity.ok(RestauranteMock.mock(restauranteId, cozinhaId));
 
         var response = restauranteController.update(restauranteId,
-                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
+                RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
@@ -130,7 +130,7 @@ class RestauranteControllerTest {
         var expected = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         var response = restauranteController.update(restauranteId,
-                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
+                RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
@@ -143,13 +143,13 @@ class RestauranteControllerTest {
         when(restauranteRepository.findById(restauranteId))
                 .thenReturn(Optional.of(RestauranteMock.mock(restauranteId, cozinhaId)));
 
-        when(restauranteService.save(RestauranteMock.mockForUpdateWithCozinhaId(restauranteId, cozinhaId)))
+        when(restauranteService.save(RestauranteMock.mockForUpdateWithOtherEntitiesIds(restauranteId, cozinhaId)))
                 .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         var response = restauranteController.update(restauranteId,
-                RestauranteMock.mockForUpdateWithoutIdAndWithCozinhaId(cozinhaId));
+                RestauranteMock.mockForUpdateWithoutIdAndWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
