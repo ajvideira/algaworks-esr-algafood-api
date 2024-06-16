@@ -61,12 +61,12 @@ class RestauranteServiceTest {
         when(formaPagamentoRepository.findById(2L)).thenReturn(Optional.of(FormaPagamentoMock.mock(2L)));
         when(formaPagamentoRepository.findById(3L)).thenReturn(Optional.of(FormaPagamentoMock.mock(3L)));
 
-        when(restauranteRepository.save(RestauranteMock.mockForInsertWithFullCozinha(cozinhaId)))
+        when(restauranteRepository.save(RestauranteMock.mockForInsertWithFullEntities(cozinhaId)))
                 .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
         var expected = RestauranteMock.mock(cozinhaId, restauranteId);
 
-        var response = restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
+        var response = restauranteService.save(RestauranteMock.mockForInsertWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
@@ -87,7 +87,7 @@ class RestauranteServiceTest {
         when(formaPagamentoRepository.findById(3L)).thenReturn(Optional.of(FormaPagamentoMock.mock(3L)));
 
         when(restauranteRepository.save(
-                RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId)))
+                RestauranteMock.mockForUpdateWithFullEntities(restauranteId, cozinhaId)))
                 .thenReturn(RestauranteMock.mock(1L, cozinhaId));
 
         var expected = RestauranteMock.mock(restauranteId, cozinhaId);

@@ -82,7 +82,7 @@ class RestauranteRepositoryImplTest {
     void shouldAdd() {
         var cozinhaId = 1L;
 
-        var restaurante = RestauranteMock.mockForInsertWithFullCozinha(cozinhaId);
+        var restaurante = RestauranteMock.mockForInsertWithFullEntities(cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 
@@ -94,7 +94,7 @@ class RestauranteRepositoryImplTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        var restaurante = RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId);
+        var restaurante = RestauranteMock.mockForUpdateWithFullEntities(restauranteId, cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 
@@ -107,7 +107,7 @@ class RestauranteRepositoryImplTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        var restaurante = RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId);
+        var restaurante = RestauranteMock.mockForUpdateWithFullEntities(restauranteId, cozinhaId);
 
         restaurante = restauranteRepository.save(restaurante);
 

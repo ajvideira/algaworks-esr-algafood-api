@@ -1,7 +1,11 @@
 package br.com.ajvideira.algafood.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -43,5 +47,13 @@ public class Restaurante {
 
     @Embedded
     private Endereco endereco;
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime dataCadastro;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime dataAtualizacao;
 
 }

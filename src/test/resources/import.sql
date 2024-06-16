@@ -15,10 +15,10 @@ INSERT INTO cozinha (nome) VALUES ('Tailandesa');
 INSERT INTO cozinha (nome) VALUES ('Indiana');
 INSERT INTO cozinha (nome) VALUES ('Italiana');
 
-INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id) VALUES ('Wok Thai Food', 9.90, 1, '90040001', 'Avenida João Pessoa', '1784', '1601', 'Farroupilha', 4);
-INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id) VALUES ('Tuk tuk', 13.50, 1, '91898909', 'Rua João Manoel', '1243', '76', 'Centro', 2);
-INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id) VALUES ('Sharin', 7.30, 2, '99098678', 'Rua República', '87', '1', 'Menino Deus', 1);
-INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id) VALUES ('Namaste', 0, 2, '98765678', 'Avenida Ipiranga', '55', '814', 'Praia de Belas', 4);
+INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Wok Thai Food', 9.90, 1, '90040001', 'Avenida João Pessoa', '1784', '1601', 'Farroupilha', 4, now(), now());
+INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Tuk tuk', 13.50, 1, '91898909', 'Rua João Manoel', '1243', '76', 'Centro', 2, now(), now());
+INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Sharin', 7.30, 2, '99098678', 'Rua República', '87', '1', 'Menino Deus', 1, now(), now());
+INSERT INTO restaurante (nome, taxa_frete, cozinha_id, cep, logradouro, numero, complemento, bairro, cidade_id, data_cadastro, data_atualizacao) VALUES ('Namaste', 0, 2, '98765678', 'Avenida Ipiranga', '55', '814', 'Praia de Belas', 4, now(), now());
 
 INSERT INTO forma_pagamento (descricao) VALUES ('Débito');
 INSERT INTO forma_pagamento (descricao) VALUES ('Crédito');

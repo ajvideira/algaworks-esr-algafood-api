@@ -77,12 +77,12 @@ class RestauranteControllerTest {
         var cozinhaId = 1L;
         var restauranteId = 1L;
 
-        when(restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId)))
+        when(restauranteService.save(RestauranteMock.mockForInsertWithOtherEntitiesIds(cozinhaId)))
                 .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
 
         var expected = ResponseEntity.status(HttpStatus.CREATED).body(RestauranteMock.mock(restauranteId, cozinhaId));
 
-        var response = restauranteController.create(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
+        var response = restauranteController.create(RestauranteMock.mockForInsertWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
@@ -91,12 +91,12 @@ class RestauranteControllerTest {
     void shouldReturnBadRequestWhenCozinhaNotExistsInCreate() {
         var cozinhaId = 1L;
 
-        when(restauranteService.save(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId)))
+        when(restauranteService.save(RestauranteMock.mockForInsertWithOtherEntitiesIds(cozinhaId)))
                 .thenThrow(EntityNotFoundException.class);
 
         var expected = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        var response = restauranteController.create(RestauranteMock.mockForInsertWithCozinhaId(cozinhaId));
+        var response = restauranteController.create(RestauranteMock.mockForInsertWithOtherEntitiesIds(cozinhaId));
 
         assertEquals(expected, response);
     }
