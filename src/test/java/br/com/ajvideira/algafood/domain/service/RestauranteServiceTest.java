@@ -18,9 +18,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
+import br.com.ajvideira.algafood.domain.repository.CidadeRepository;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
+import br.com.ajvideira.algafood.domain.repository.FormaPagamentoRepository;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
+import br.com.ajvideira.algafood.util.mock.CidadeMock;
 import br.com.ajvideira.algafood.util.mock.CozinhaMock;
+import br.com.ajvideira.algafood.util.mock.FormaPagamentoMock;
 import br.com.ajvideira.algafood.util.mock.RestauranteMock;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,12 +39,26 @@ class RestauranteServiceTest {
     @Mock
     private CozinhaRepository cozinhaRepository;
 
+    @Mock
+    private CidadeRepository cidadeRepository;
+
+    @Mock
+    private FormaPagamentoRepository formaPagamentoRepository;
+
     @Test
     void shouldInsertRestaurante() {
         var cozinhaId = 1L;
         var restauranteId = 1L;
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
         when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
+
+        when(formaPagamentoRepository.findById(1L)).thenReturn(Optional.of(FormaPagamentoMock.mock(1L)));
+        when(formaPagamentoRepository.findById(2L)).thenReturn(Optional.of(FormaPagamentoMock.mock(2L)));
+        when(formaPagamentoRepository.findById(3L)).thenReturn(Optional.of(FormaPagamentoMock.mock(3L)));
 
         when(restauranteRepository.save(RestauranteMock.mockForInsertWithFullCozinha(cozinhaId)))
                 .thenReturn(RestauranteMock.mock(restauranteId, cozinhaId));
@@ -56,8 +74,16 @@ class RestauranteServiceTest {
     void shouldUpdateRestaurante() {
         var cozinhaId = 1L;
         var restauranteId = 1L;
+        var cidadeId = 1L;
+        var estadoId = 1L;
 
         when(cozinhaRepository.findById(cozinhaId)).thenReturn(Optional.of(CozinhaMock.mock(cozinhaId)));
+
+        when(cidadeRepository.findById(cidadeId)).thenReturn(Optional.of(CidadeMock.mock(cidadeId, estadoId)));
+
+        when(formaPagamentoRepository.findById(1L)).thenReturn(Optional.of(FormaPagamentoMock.mock(1L)));
+        when(formaPagamentoRepository.findById(2L)).thenReturn(Optional.of(FormaPagamentoMock.mock(2L)));
+        when(formaPagamentoRepository.findById(3L)).thenReturn(Optional.of(FormaPagamentoMock.mock(3L)));
 
         when(restauranteRepository.save(
                 RestauranteMock.mockForUpdateWithFullCozinha(restauranteId, cozinhaId)))

@@ -30,4 +30,8 @@ public class FormaPagamentoMock {
         return new FormaPagamento(formaPagamentoId, null);
     }
 
+    public static List<FormaPagamento> mockListForSaveInOtherEntity() {
+        return List.of(mockForSaveInOtherEntity(1L), mockForSaveInOtherEntity(2L), mockForSaveInOtherEntity(3L));
+    }
+
 }

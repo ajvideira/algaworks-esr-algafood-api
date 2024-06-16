@@ -1,5 +1,8 @@
 package br.com.ajvideira.algafood.domain.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -7,8 +10,11 @@ import org.springframework.stereotype.Service;
 import br.com.ajvideira.algafood.domain.exception.EntityInUseException;
 import br.com.ajvideira.algafood.domain.exception.EntityNotFoundException;
 import br.com.ajvideira.algafood.domain.model.Cozinha;
+import br.com.ajvideira.algafood.domain.model.FormaPagamento;
 import br.com.ajvideira.algafood.domain.model.Restaurante;
+import br.com.ajvideira.algafood.domain.repository.CidadeRepository;
 import br.com.ajvideira.algafood.domain.repository.CozinhaRepository;
+import br.com.ajvideira.algafood.domain.repository.FormaPagamentoRepository;
 import br.com.ajvideira.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -18,9 +24,16 @@ public class RestauranteService {
 
     private CozinhaRepository cozinhaRepository;
 
-    public RestauranteService(RestauranteRepository restauranteRepository, CozinhaRepository cozinhaRepository) {
+    private CidadeRepository cidadeRepository;
+
+    private FormaPagamentoRepository formaPagamentoRepository;
+
+    public RestauranteService(RestauranteRepository restauranteRepository, CozinhaRepository cozinhaRepository,
+            CidadeRepository cidadeRepository, FormaPagamentoRepository formaPagamentoRepository) {
         this.restauranteRepository = restauranteRepository;
         this.cozinhaRepository = cozinhaRepository;
+        this.cidadeRepository = cidadeRepository;
+        this.formaPagamentoRepository = formaPagamentoRepository;
     }
 
     public Restaurante save(Restaurante restaurante) {
@@ -28,10 +41,32 @@ public class RestauranteService {
 
         if (cozinha == null) {
             throw new EntityNotFoundException(
-                    String.format("Restaurante de ID #%d não existe.", restaurante.getCozinha().getId()));
+                    String.format("Cozinha de ID #%d não existe.", restaurante.getCozinha().getId()));
         }
 
         restaurante.setCozinha(cozinha);
+
+        var cidade = cidadeRepository.findById(restaurante.getEndereco().getCidade().getId()).orElse(null);
+
+        if (cidade == null) {
+            throw new EntityNotFoundException(
+                    String.format("Cidade de ID #%d não existe.", restaurante.getEndereco().getCidade().getId()));
+        }
+
+        List<FormaPagamento> formasPagamento = new ArrayList<>();
+
+        for (FormaPagamento formaPagamento : restaurante.getFormasPagamento()) {
+            var novaFormaPagamento = formaPagamentoRepository.findById(formaPagamento.getId()).orElse(null);
+            if (novaFormaPagamento == null) {
+                throw new EntityNotFoundException(
+                        String.format("Forma de pagamento de ID #%d não existe.", formaPagamento.getId()));
+            }
+            formasPagamento.add(novaFormaPagamento);
+        }
+
+        restaurante.setFormasPagamento(formasPagamento);
+
+        restaurante.getEndereco().setCidade(cidade);
 
         return restauranteRepository.save(restaurante);
     }

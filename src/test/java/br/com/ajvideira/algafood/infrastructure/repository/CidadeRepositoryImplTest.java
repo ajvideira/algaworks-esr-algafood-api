@@ -23,7 +23,7 @@ class CidadeRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(3, cidadeRepository.findAll().size());
+        assertEquals(4, cidadeRepository.findAll().size());
     }
 
     @Test

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,5 +40,8 @@ public class Restaurante {
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id", nullable = false))
     @ManyToMany
     private List<FormaPagamento> formasPagamento;
+
+    @Embedded
+    private Endereco endereco;
 
 }

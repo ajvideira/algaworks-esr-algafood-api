@@ -22,7 +22,7 @@ class EstadoRepositoryImplTest {
 
     @Test
     void shouldFindAll() {
-        assertEquals(6, estadoRepository.findAll().size());
+        assertEquals(7, estadoRepository.findAll().size());
     }
 
     @Test
